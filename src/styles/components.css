@@ -14,26 +14,28 @@
   border-radius: var(--chenxing-radius-lg);
   box-shadow: var(--chenxing-shadow-card), var(--chenxing-shadow-float);
 }
+/* 对角角标：2px 线宽 + 辉光 + radius-lg 贴卡片弧度，与 toast 的角标同参
+   （体系里同一件事只有一种写法） */
 .chenxing-hud-panel::before,
 .chenxing-hud-panel::after {
   content: "";
   position: absolute;
-  width: 18px;
-  height: 18px;
+  width: 20px;
+  height: 20px;
   pointer-events: none;
-  opacity: 0.9;
+  filter: drop-shadow(0 0 8px var(--chenxing-cyan));
 }
 .chenxing-hud-panel::before {
   top: -1px; left: -1px;
-  border-top: 1px solid var(--chenxing-cyan);
-  border-left: 1px solid var(--chenxing-cyan);
-  border-top-left-radius: var(--chenxing-radius-md);
+  border-top: 2px solid var(--chenxing-cyan);
+  border-left: 2px solid var(--chenxing-cyan);
+  border-top-left-radius: var(--chenxing-radius-lg);
 }
 .chenxing-hud-panel::after {
   bottom: -1px; right: -1px;
-  border-bottom: 1px solid var(--chenxing-cyan);
-  border-right: 1px solid var(--chenxing-cyan);
-  border-bottom-right-radius: var(--chenxing-radius-md);
+  border-bottom: 2px solid var(--chenxing-cyan);
+  border-right: 2px solid var(--chenxing-cyan);
+  border-bottom-right-radius: var(--chenxing-radius-lg);
 }
 
 /* ---------- 深空表面：网格 + 高级黑 + CSS 星点 ---------- */
@@ -267,19 +269,66 @@ td.chenxing-label {
 }
 
 /* ---------- chips / badges / links / dividers ---------- */
+/* 紧凑数据标签：固定 28px 高保证一行 chip 基线整齐；字距收敛到 0.03em、
+   底色降到近透明的上亮下暗渐变，青色只保留在文字与描边，避免整颗胶囊发光。 */
 .chenxing-chip {
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: 0.3rem;
+  height: 1.75rem;
+  padding: 0 0.75rem;
   font-family: var(--chenxing-font-mono);
-  font-size: 0.6875rem;
-  letter-spacing: 0.08em;
+  font-size: 0.75rem;
+  line-height: 1;
+  letter-spacing: 0.03em;
   white-space: nowrap;
-  color: var(--chenxing-cyan);
-  background: var(--chenxing-cyan-soft);
-  border: 1px solid rgba(103, 232, 249, 0.24);
+  color: var(--chenxing-foreground);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03));
+  border: 1px solid var(--chenxing-border);
   border-radius: var(--chenxing-radius-pill);
-  padding: 0.3rem 0.7rem;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+/* 语义色变体：只动文字/描边/底色三件事，几何一律继承基类 */
+.chenxing-chip-accent {
+  color: var(--chenxing-cyan);
+  background: linear-gradient(180deg, rgba(103, 232, 249, 0.10), rgba(103, 232, 249, 0.04));
+  border-color: rgba(103, 232, 249, 0.20);
+}
+.chenxing-chip-success {
+  color: #6ee7b7;
+  background: linear-gradient(180deg, rgba(52, 211, 153, 0.10), rgba(52, 211, 153, 0.04));
+  border-color: rgba(52, 211, 153, 0.22);
+}
+.chenxing-chip-warning {
+  color: #fcd34d;
+  background: linear-gradient(180deg, rgba(251, 191, 36, 0.10), rgba(251, 191, 36, 0.04));
+  border-color: rgba(251, 191, 36, 0.24);
+}
+.chenxing-chip-danger {
+  color: var(--chenxing-error);
+  background: linear-gradient(180deg, rgba(255, 107, 122, 0.10), rgba(255, 107, 122, 0.04));
+  border-color: rgba(255, 107, 122, 0.26);
+}
+/* 可移除态：右内边距让位给 24px 圆形按钮（28px 高内上下各留 2px） */
+.chenxing-chip.is-removable {
+  padding-right: 0.2rem;
+  gap: 0.15rem;
+}
+.chenxing-chip-remove {
+  color: var(--chenxing-muted-foreground);
+  transition: color 0.15s, background 0.15s;
+}
+.chenxing-chip-remove:hover {
+  color: inherit;
+  background: rgba(255, 255, 255, 0.10);
+}
+.chenxing-chip-remove:focus-visible {
+  outline: 1px solid currentColor;
+  outline-offset: 1px;
+  color: inherit;
+}
+@media (prefers-reduced-motion: reduce) {
+  .chenxing-chip-remove { transition: none; }
 }
 .chenxing-badge,
 .chenxing-badge-success,
@@ -329,4 +378,618 @@ td.chenxing-label {
 .chenxing-divider {
   height: 1px;
   background: linear-gradient(90deg, transparent, var(--chenxing-border-strong), transparent);
+}
+
+/* ---------- navigation menu（汉堡导航，WAI-ARIA disclosure） ---------- */
+.chenxing-nav-menu {
+  position: relative;
+  display: inline-flex;
+}
+/* 三根等长细条，无边框无底色（裸汉堡）；条本身 16x2px 远低于 WCAG 2.5.8
+   目标尺寸下限，命中区靠 40x40 的透明按钮补足。 */
+.chenxing-hamburger {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: calc(0.1875 * var(--cx-u));
+  width: calc(2.5 * var(--cx-u));
+  height: calc(2.5 * var(--cx-u));
+  cursor: pointer;
+}
+.chenxing-hamburger span {
+  display: block;
+  width: calc(1 * var(--cx-u));
+  height: max(2px, calc(0.125 * var(--cx-u)));
+  background: var(--chenxing-foreground);
+  /* 开合行程只有 5px：0.6s expo.out 让「三条汇聚成一条」读得出来 */
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), background 0.2s;
+}
+/* 展开态：中条不动，上下两条平移汇聚叠成单横。
+   平移量 = 条高(2px) + 间距(3px) = 中心距 5px = 0.3125u */
+.chenxing-hamburger.is-open span:nth-child(1) { transform: translateY(calc(0.3125 * var(--cx-u))); }
+.chenxing-hamburger.is-open span:nth-child(3) { transform: translateY(calc(-0.3125 * var(--cx-u))); }
+.chenxing-hamburger:hover span,
+.chenxing-hamburger:focus-visible span { background: var(--chenxing-cyan); }
+
+/* 遮罩只负责压暗并模糊背景。默认不拦截指针：关闭后它是透明层，
+   若仍可命中就会吞掉页面点击；打开（is-open）时才恢复命中。 */
+.chenxing-nav-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--chenxing-z-menu);
+  background: rgba(2, 4, 10, 0.55);
+  backdrop-filter: blur(12px) saturate(1.2);
+  -webkit-backdrop-filter: blur(12px) saturate(1.2);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+.chenxing-nav-overlay.is-open { opacity: 1; pointer-events: auto; }
+
+/* 玻璃面板：挂在触发器下方，与遮罩同层、DOM 在后故压在遮罩之上；
+   封顶高度 + 内滚，dvh 兜住移动端地址栏伸缩。 */
+.chenxing-nav-panel {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  right: 0;
+  z-index: var(--chenxing-z-menu);
+  min-width: 13rem;
+  max-height: min(calc(100dvh - 6rem), 34rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 0.4rem;
+  background: var(--chenxing-popover);
+  backdrop-filter: blur(18px) saturate(1.2);
+  -webkit-backdrop-filter: blur(18px) saturate(1.2);
+  border: 1px solid var(--chenxing-border-strong);
+  border-radius: var(--chenxing-radius-md);
+  box-shadow: var(--chenxing-shadow-overlay);
+}
+/* 面板内的导航行：链接/按钮通用 */
+.chenxing-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  width: 100%;
+  padding: 0.55rem 0.7rem;
+  font-family: var(--chenxing-font-body);
+  font-size: 0.875rem;
+  color: var(--chenxing-foreground);
+  border-radius: var(--chenxing-radius-sm);
+  transition: background 0.15s;
+  cursor: pointer;
+}
+.chenxing-menu-item:hover { background: var(--chenxing-muted); }
+/* 暂无行为的静态条目：保留行样式，移除可点击暗示 */
+.chenxing-menu-item.is-static { cursor: default; }
+.chenxing-menu-item.is-static:hover { background: transparent; }
+
+@media (prefers-reduced-motion: reduce) {
+  .chenxing-hamburger span,
+  .chenxing-nav-overlay,
+  .chenxing-menu-item { transition: none; }
+}
+
+/* ---------- global top bar: floating glass capsule ---------- */
+/* 外层 sticky 壳的流内高度固定为一行：抽屉展开只在视觉上向下溢出覆盖内容，
+   不撑高文档。胶囊视觉（背景/边框/抽屉）全部由内层 capsule 承担。 */
+.chenxing-topbar {
+  position: sticky;
+  top: 0.9rem;
+  z-index: var(--chenxing-z-topbar);
+  width: calc(100% - 2rem);
+  height: calc(3.125 * var(--cx-u) + 2px);
+  margin: 0.9rem auto 0;
+}
+/* 胶囊：438px 上限 + 固定 50px 行高的纵向 flex 容器，汉堡菜单作为第二行
+   在胶囊内部手风琴展开。不设 overflow:hidden——裁切由抽屉容器自己负责。 */
+.chenxing-topbar-capsule {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: calc(27.375 * var(--cx-u));
+  margin: 0 auto;
+  background: var(--chenxing-glass-background);
+  backdrop-filter: var(--chenxing-glass-blur);
+  -webkit-backdrop-filter: var(--chenxing-glass-blur);
+  border: 1px solid var(--chenxing-glass-border);
+  border-radius: var(--chenxing-radius-lg);
+  box-shadow: var(--chenxing-glass-shadow);
+  transition:
+    max-width 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 0.35s ease,
+    border-color 0.35s ease,
+    backdrop-filter 0.35s ease,
+    box-shadow 0.35s ease;
+}
+/* 固定 50px 行高；relative 是中央微标签绝对居中的定位父级 */
+.chenxing-topbar-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: calc(3.125 * var(--cx-u));
+  padding-left: calc(0.5625 * var(--cx-u));
+  padding-right: calc(0.625 * var(--cx-u));
+  transition: padding 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+}
+/* 页面顶部时 chrome 融入页面：无边框全宽透明条；滚动后收拢成胶囊。
+   菜单展开时强制回到胶囊形态：抽屉必须长在有形容器里。 */
+.chenxing-topbar[data-expanded]:not([data-open]) .chenxing-topbar-capsule {
+  max-width: 100%;
+  background: transparent;
+  backdrop-filter: blur(0px) saturate(1);
+  -webkit-backdrop-filter: blur(0px) saturate(1);
+  border-color: transparent;
+  box-shadow: none;
+}
+.chenxing-topbar[data-expanded]:not([data-open]) .chenxing-topbar-row {
+  padding-left: 0.25rem;
+  padding-right: 0.25rem;
+}
+.chenxing-topbar-brand {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  opacity: 1;
+  transform: scale(1);
+  transform-origin: left center;
+  transition:
+    opacity 0.35s ease,
+    transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+}
+/* 36px 字形：顶栏唯一的品牌承载物 */
+.chenxing-topbar-mark {
+  width: calc(2.25 * var(--cx-u));
+  height: calc(2.25 * var(--cx-u));
+  border-radius: var(--chenxing-radius-md);
+}
+.chenxing-topbar[data-expanded]:not([data-open]) .chenxing-topbar-brand {
+  opacity: 0.62;
+  transform: scale(0.96);
+}
+.chenxing-topbar[data-expanded]:not([data-open]) .chenxing-topbar-brand:hover,
+.chenxing-topbar[data-expanded]:not([data-open]) .chenxing-topbar-brand:focus-visible {
+  opacity: 1;
+}
+.chenxing-topbar[data-expanded][data-hide-brand-when-expanded]:not([data-open]) .chenxing-topbar-brand {
+  opacity: 0;
+  pointer-events: none;
+}
+/* 桌面内联锚点：只在页面顶部全宽展开态出现，与收拢态的中央微标签永不同框。
+   收拢态用 visibility 移出 Tab 顺序（只 opacity:0 会违反 WCAG 2.4.7 可见焦点） */
+.chenxing-topbar-links {
+  display: none;
+}
+@media (min-width: 1024px) {
+  .chenxing-topbar-links {
+    display: inline-flex;
+    align-items: center;
+    gap: calc(1.75 * var(--cx-u));
+    margin-left: calc(2 * var(--cx-u));
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition:
+      opacity 0.35s ease,
+      visibility 0s linear 0.35s;
+  }
+  .chenxing-topbar[data-expanded]:not([data-open]) .chenxing-topbar-links {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transition:
+      opacity 0.35s ease,
+      visibility 0s linear 0s;
+  }
+  .chenxing-topbar-links a {
+    font-family: var(--chenxing-font-body);
+    font-size: calc(0.8125 * var(--cx-u));
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    color: var(--chenxing-muted-foreground);
+    transition: color 0.18s ease;
+  }
+  .chenxing-topbar-links a:hover,
+  .chenxing-topbar-links a:focus-visible {
+    color: var(--chenxing-cyan);
+  }
+}
+/* 驱动展开/收拢观察器的隐形哨兵 */
+.chenxing-topbar-sentinel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 2.25rem;
+  opacity: 0;
+  pointer-events: none;
+}
+/* 中央微标签：绝对居中与两侧元素宽度解耦，pointer-events:none 不挡命中区 */
+.chenxing-topbar-status {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: inline-flex;
+  align-items: center;
+  gap: calc(0.4 * var(--cx-u));
+  max-width: calc(100% - 9 * var(--cx-u));
+  font-family: var(--chenxing-font-mono);
+  font-size: calc(0.8125 * var(--cx-u));
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  line-height: 1.6;
+  white-space: nowrap;
+  overflow: hidden;
+  color: var(--chenxing-ice);
+  pointer-events: none;
+  transition: opacity 0.35s ease;
+}
+.chenxing-topbar-status[data-hidden] {
+  opacity: 0;
+}
+@media (max-width: 480px) {
+  .chenxing-topbar-status {
+    left: 44%;
+    max-width: calc(100% - 11rem);
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .chenxing-topbar-actions {
+    gap: 0.25rem;
+  }
+}
+/* 右侧动作簇：汉堡 + 插槽动作，ml-auto 推到行尾 */
+.chenxing-topbar-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+/* ---------- 胶囊内手风琴抽屉 ---------- */
+/* 高度像素值由 useAccordionHeight 实测后写在 style 上（CSS 过渡不认 auto）。
+   overflow:hidden 同时负责收拢裁切与底部圆角续接。 */
+.chenxing-topbar-drawer {
+  overflow: hidden;
+  border-bottom-left-radius: calc(var(--chenxing-radius-lg) - 1px);
+  border-bottom-right-radius: calc(var(--chenxing-radius-lg) - 1px);
+  transition: height 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+/* 内层保持自然高度供外层测量；菜单长于 70vh 时内部滚动，胶囊不顶穿视口 */
+.chenxing-topbar-drawer-inner {
+  max-height: 70vh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.chenxing-topbar-drawer-inner::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+/* 汉堡遮罩：只负责压暗并模糊背景。必须是顶栏兄弟节点——遮罩若嵌在顶栏内部，
+   顶栏无法靠 z-index 逃出模糊；z-topbar(55) > z-menu(50) 让胶囊保持清晰。 */
+.cx-menu-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--chenxing-z-menu);
+  background: rgba(2, 4, 10, 0.55);
+  backdrop-filter: blur(12px) saturate(1.2);
+  -webkit-backdrop-filter: blur(12px) saturate(1.2);
+  opacity: 0;
+  /* 关闭后遮罩还要存活 450ms 完成退出动画：透明层不拦截指针，is-open 才恢复命中 */
+  pointer-events: none;
+  transition: opacity 0.35s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+.cx-menu-overlay.is-open { opacity: 1; pointer-events: auto; }
+/* 面板长在胶囊内部，玻璃材质由胶囊本身提供：卸掉浮层外观，
+   避免玻璃胶囊里套出第二层玻璃卡片 */
+.chenxing-menu.cx-nav-panel {
+  width: 100%;
+  min-width: 0;
+  padding: 0;
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+}
+/* 导航行：固定 50px 行高与顶栏行同高，展开后整个胶囊读成一列等距格。
+   flex-shrink:0 防止内容多时被压扁——超高由抽屉内层滚动承接。 */
+.cx-nav-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: calc(0.8 * var(--cx-u));
+  width: 100%;
+  height: calc(3.125 * var(--cx-u));
+  flex-shrink: 0;
+  padding: 0 calc(0.85 * var(--cx-u));
+  font-family: var(--chenxing-font-body);
+  font-size: calc(1 * var(--cx-u));
+  font-weight: 400;
+  color: var(--chenxing-foreground);
+  cursor: pointer;
+  transition: background 0.18s ease;
+}
+/* 每行顶部 1px 分隔线随入场从左向右画出（::after 常驻线），
+   ::before 是 hover 时盖上去的青色高亮线 */
+.cx-nav-row::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--chenxing-border);
+  transform: scaleX(0);
+  transform-origin: left center;
+  animation: cx-line-in 0.65s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc(var(--i, 0) * 50ms + 100ms);
+}
+@keyframes cx-line-in {
+  to { transform: scaleX(1); }
+}
+.cx-nav-row::before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--chenxing-cyan);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.cx-nav-row:hover { background: var(--chenxing-muted); }
+.cx-nav-row:hover::before { transform: scaleX(1); }
+.cx-nav-row-label {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  overflow: hidden;
+}
+/* 文字从遮罩下方升起，逐行 50ms 级联 */
+.cx-nav-row-text {
+  display: block;
+  transform: translateY(118%);
+  animation: cx-mask-up 0.75s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc(var(--i, 0) * 50ms + 120ms);
+  transition: color 0.2s;
+}
+@keyframes cx-mask-up {
+  to { transform: translateY(0); }
+}
+.cx-nav-row:hover .cx-nav-row-text { color: var(--chenxing-cyan); }
+.cx-nav-row svg { color: var(--chenxing-muted-foreground); transition: color 0.2s; }
+.cx-nav-row:hover svg { color: var(--chenxing-cyan); }
+/* 暂无行为的静态条目：保留行样式与入场，移除可点击暗示与 hover 反馈 */
+.cx-nav-row.is-static { cursor: default; }
+.cx-nav-row.is-static:hover { background: transparent; }
+.cx-nav-row.is-static:hover::before { transform: scaleX(0); }
+.cx-nav-row.is-static:hover .cx-nav-row-text { color: var(--chenxing-foreground); }
+.cx-nav-row.is-static:hover svg { color: var(--chenxing-muted-foreground); }
+/* 抽屉底部附加区：跟在菜单项级联之后入场的收尾一拍 */
+.cx-nav-panel-extra {
+  border-top: 1px solid var(--chenxing-border);
+  padding: calc(0.7 * var(--cx-u));
+  animation: cx-nav-fade 0.5s ease both;
+  animation-delay: 290ms;
+}
+@keyframes cx-nav-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+/* ---------- 抽屉关闭编排 ----------
+   高度收拢的同时：文字沉回遮罩下方、分隔线向左收回、图标淡出；
+   全部同时开始，不做反向级联。is-closing 由 Topbar 在退出延时窗口内挂上。 */
+.chenxing-topbar-drawer.is-closing .cx-nav-row-text {
+  animation: cx-mask-down 0.4s cubic-bezier(0.77, 0, 0.175, 1) both;
+  animation-delay: 0ms;
+}
+.chenxing-topbar-drawer.is-closing .cx-nav-row::after {
+  animation: cx-line-out 0.35s cubic-bezier(0.77, 0, 0.175, 1) both;
+  animation-delay: 0ms;
+}
+.chenxing-topbar-drawer.is-closing .cx-nav-row svg,
+.chenxing-topbar-drawer.is-closing .cx-nav-panel-extra {
+  animation: cx-nav-fade-out 0.3s ease both;
+  animation-delay: 0ms;
+}
+@keyframes cx-mask-down {
+  from { transform: translateY(0); }
+  to { transform: translateY(118%); }
+}
+@keyframes cx-line-out {
+  from { transform: scaleX(1); }
+  to { transform: scaleX(0); }
+}
+@keyframes cx-nav-fade-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .chenxing-topbar-capsule,
+  .chenxing-topbar-row,
+  .chenxing-topbar-brand,
+  .chenxing-topbar-drawer,
+  .cx-menu-overlay { transition: none; }
+  .cx-nav-row::after { animation: none; transform: scaleX(1); }
+  .cx-nav-row-text { animation: none; transform: none; }
+  .cx-nav-panel-extra,
+  .chenxing-topbar-drawer.is-closing .cx-nav-row svg { animation: none; }
+}
+/* ---------- 账户面板：胶囊抽屉里的第二个面板（头像触发） ----------
+   布局复用 .chenxing-menu.cx-nav-panel 的无背景样式（玻璃材质由胶囊提供），
+   .cx-account-panel 本身只作语义标记。 */
+/* 信息头：透明背景，和胶囊内部一致 */
+.cx-account-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem 1.5rem 1.5rem;
+  background: transparent;
+  border-bottom: 1px solid var(--chenxing-border);
+}
+/* 配额卡片 */
+.cx-quota-card {
+  padding: 0.875rem 1rem;
+  background: rgba(4, 8, 16, 0.65);
+  border: 1px solid var(--chenxing-border);
+  border-radius: var(--chenxing-radius-sm);
+  transition: border-color 0.2s ease;
+}
+.cx-quota-card:hover {
+  border-color: rgba(56, 189, 248, 0.35);
+}
+@media (prefers-reduced-motion: reduce) {
+  .cx-quota-card { transition: none; }
+}
+/* ---------- toast：侧边滑入的玻璃通知堆叠 ----------
+   叠卡形态对齐 HeroUI v3：每层缩小 5%、轴向错位 12px（--cx-toast-gap）、
+   非最前卡高度锁成最前卡（--cx-toast-front-h）露一条边；不做 hover 展开列表。
+   入场有意偏离 HeroUI（原版纯垂直滑入）：end 侧从右、start 侧从左滑入。 */
+.cx-toast-region {
+  position: fixed;
+  z-index: var(--chenxing-z-toast);
+  width: min(22.5rem, calc(100vw - 2rem));
+  height: var(--cx-toast-front-h, auto);
+  /* 区域本身不吃指针（不挡住页面），卡片单独恢复命中 */
+  pointer-events: none;
+}
+.cx-toast-region[data-placement='bottom-end'] { right: 1rem; bottom: 1rem; --cx-toast-dir: -1; }
+.cx-toast-region[data-placement='bottom-start'] { left: 1rem; bottom: 1rem; --cx-toast-dir: -1; }
+.cx-toast-region[data-placement='top-end'] { right: 1rem; top: 1rem; --cx-toast-dir: 1; }
+.cx-toast-region[data-placement='top-start'] { left: 1rem; top: 1rem; --cx-toast-dir: 1; }
+/* 槽位承担堆叠几何（位移/缩放/层级），进出场动画在内层卡片上，两者互不打架 */
+.cx-toast-slot {
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: calc(40 - var(--cx-i));
+  transform: translateY(calc(var(--cx-i) * var(--cx-toast-gap) * var(--cx-toast-dir)))
+             scale(calc(1 - var(--cx-i) * 0.05));
+  transition: transform 0.35s ease, opacity 0.35s ease;
+}
+.cx-toast-region[data-placement^='bottom'] .cx-toast-slot { bottom: 0; transform-origin: bottom center; }
+.cx-toast-region[data-placement^='top'] .cx-toast-slot { top: 0; transform-origin: top center; }
+/* 非最前卡：高度锁定 + 裁切露边，且不可交互（HeroUI 同款） */
+.cx-toast-slot:not(.is-front) {
+  height: var(--cx-toast-front-h);
+  overflow: hidden;
+  pointer-events: none;
+}
+/* 第 maxVisible+1 张起：保留 DOM 但透明（aria-hidden 由组件挂） */
+.cx-toast-slot.is-hidden { opacity: 0; }
+
+.cx-toast {
+  pointer-events: auto;
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  padding: 0.85rem 2.2rem 0.85rem 1rem;
+  background: var(--chenxing-glass-background);
+  backdrop-filter: var(--chenxing-glass-blur);
+  -webkit-backdrop-filter: var(--chenxing-glass-blur);
+  border: 1px solid var(--chenxing-glass-border);
+  border-radius: var(--chenxing-radius-lg);
+  box-shadow: var(--chenxing-glass-shadow);
+  animation: cx-toast-in 0.35s ease both;
+}
+.cx-toast-region[data-placement$='start'] .cx-toast { animation-name: cx-toast-in-left; }
+.cx-toast.is-closing { animation: cx-toast-out 0.35s ease forwards; }
+.cx-toast-region[data-placement$='start'] .cx-toast.is-closing { animation-name: cx-toast-out-left; }
+@keyframes cx-toast-in {
+  from { transform: translateX(calc(100% + 1.5rem)); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+@keyframes cx-toast-in-left {
+  from { transform: translateX(calc(-100% - 1.5rem)); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+@keyframes cx-toast-out {
+  to { transform: translateX(calc(100% + 1.5rem)); opacity: 0; }
+}
+@keyframes cx-toast-out-left {
+  to { transform: translateX(calc(-100% - 1.5rem)); opacity: 0; }
+}
+/* tone：左上/右下对角闪光角标 + 图标着色。角标配方与 .chenxing-hud-panel
+   完全同参（18px、1px 描边、-1px 压住卡片边框、radius-md 圆角）——
+   这是辰星 HUD 的中心对称美学，只是把青色换成 tone 色并加一点辉光。 */
+/* 线宽 2px、满透明度、10px 辉光——沿用早前左侧竖线版的颜色与存在感，
+   只是形态换成对角角标；圆角取 radius-lg 贴着卡片弧度走 */
+.cx-toast::before,
+.cx-toast::after {
+  content: "";
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  pointer-events: none;
+  filter: drop-shadow(0 0 8px var(--cx-toast-tone));
+}
+.cx-toast::before {
+  top: -1px;
+  left: -1px;
+  border-top: 2px solid var(--cx-toast-tone);
+  border-left: 2px solid var(--cx-toast-tone);
+  border-top-left-radius: var(--chenxing-radius-lg);
+}
+.cx-toast::after {
+  bottom: -1px;
+  right: -1px;
+  border-bottom: 2px solid var(--cx-toast-tone);
+  border-right: 2px solid var(--cx-toast-tone);
+  border-bottom-right-radius: var(--chenxing-radius-lg);
+}
+.cx-toast-info { --cx-toast-tone: var(--chenxing-cyan); }
+.cx-toast-success { --cx-toast-tone: var(--chenxing-success); }
+.cx-toast-warning { --cx-toast-tone: var(--chenxing-warning); }
+.cx-toast-error { --cx-toast-tone: var(--chenxing-error); }
+.cx-toast-icon {
+  flex-shrink: 0;
+  margin-top: 1px;
+  color: var(--cx-toast-tone);
+}
+.cx-toast-body { min-width: 0; flex: 1; }
+.cx-toast-title {
+  font-family: var(--chenxing-font-body);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--chenxing-foreground);
+}
+.cx-toast-desc {
+  margin-top: 0.15rem;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--chenxing-muted-foreground);
+}
+/* 关闭按钮：常隐，最前卡 hover 或焦点进入时 150ms 淡入（HeroUI 同款节奏） */
+.cx-toast-close {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  display: inline-flex;
+  padding: 0.3rem;
+  border-radius: var(--chenxing-radius-sm);
+  color: var(--chenxing-muted-foreground);
+  opacity: 0;
+  cursor: pointer;
+  transition: opacity 0.15s ease, background 0.15s ease, color 0.15s ease;
+}
+.cx-toast-slot.is-front .cx-toast:hover .cx-toast-close,
+.cx-toast:focus-within .cx-toast-close,
+.cx-toast-close:focus-visible { opacity: 1; }
+.cx-toast-close:hover { background: var(--chenxing-muted); color: var(--chenxing-foreground); }
+@media (prefers-reduced-motion: reduce) {
+  .cx-toast, .cx-toast.is-closing { animation: none; }
+  .cx-toast-slot, .cx-toast-close { transition: none; }
+  .cx-toast.is-closing { opacity: 0; }
 }

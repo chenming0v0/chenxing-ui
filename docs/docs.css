@@ -114,3 +114,54 @@
     rgba(4, 8, 16, 0.45);
   background-size: 22px 22px, 22px 22px, auto;
 }
+
+/* ---------- 组件详情页 ---------- */
+/* 侧栏组件目录：分组标签 + 长列表内滚 */
+.docs-sidebar-nav {
+  max-height: calc(100vh - 8rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-right: 0.25rem;
+}
+.docs-nav-group {
+  margin: 0 0 0.25rem;
+  padding: 0 0.75rem;
+  font-family: var(--chenxing-font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--chenxing-muted-foreground);
+}
+.docs-nav-link[aria-current='page'] {
+  color: var(--chenxing-cyan);
+  background: var(--chenxing-cyan-soft);
+}
+/* 卡片标题链接：颜色继承，悬停转青色提示可点 */
+.docs-card-title-link { transition: color 0.15s; }
+.docs-card-title-link:hover { color: var(--chenxing-cyan); }
+/* 返回总览 */
+.docs-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.875rem;
+  color: var(--chenxing-muted-foreground);
+  transition: color 0.15s;
+}
+.docs-back-link:hover { color: var(--chenxing-foreground); }
+/* 用法代码块 */
+.docs-code {
+  margin: 0;
+  padding: 1rem 1.25rem;
+  overflow-x: auto;
+  font-family: var(--chenxing-font-mono);
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  color: var(--chenxing-cyan);
+  background: rgba(4, 8, 16, 0.6);
+  border: 1px solid var(--chenxing-border);
+  border-radius: var(--chenxing-radius-md);
+}
+/* 组件页大预览区：比卡片内预览更高，容纳整页演示 */
+.docs-preview-page { min-height: 18rem; }

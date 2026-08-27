@@ -1,22 +1,27 @@
 import type { ReactNode } from 'react'
 import { HudPanel } from '../src'
 
-/** 组件演示卡：上方实时预览区 + 下方名称与说明。 */
+/** 组件演示卡：上方实时预览区 + 下方名称与说明。
+    传入 slug 时名称成为指向组件详情页的链接。 */
 export function DemoCard({
   name,
   description,
   wide = false,
+  slug,
   children,
 }: {
   name: string
   description: string
   wide?: boolean
+  slug?: string
   children: ReactNode
 }) {
   return (
     <HudPanel as="article" className={wide ? 'docs-card-wide' : ''}>
       <div className="docs-preview">{children}</div>
-      <h3 className="chenxing-h3 mt-4">{name}</h3>
+      <h3 className="chenxing-h3 mt-4">
+        {slug ? <a className="docs-card-title-link" href={`#/c/${slug}`}>{name}</a> : name}
+      </h3>
       <p className="chenxing-caption mt-1">{description}</p>
     </HudPanel>
   )

@@ -41,6 +41,19 @@
   --chenxing-border-strong: rgba(147, 197, 253, 0.36);
   --chenxing-input: rgba(255, 255, 255, 0.08);
 
+  /* 深空玻璃材质配方：与 HudPanel 同族——近黑透明底 + 极低白色高光渐变，
+     蓝色只出现在外圈光晕和描边上。只在 :root 定义一次，顶栏等 chrome 共享。 */
+  --chenxing-glass-background:
+    linear-gradient(160deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02) 55%, rgba(125, 185, 255, 0.03)),
+    rgba(4, 8, 16, 0.6);
+  --chenxing-glass-blur: blur(22px) saturate(1.5);
+  --chenxing-glass-border: rgba(255, 255, 255, 0.12);
+  --chenxing-glass-shadow: 0 18px 44px rgba(2, 6, 16, 0.5), 0 0 30px rgba(56, 189, 248, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+
+  /* 顶栏缩放单位（lamalama 等价物）：1440 以下 16px 基准，
+     1440–1920 随视口线性放大到 21.3px；胶囊内尺寸以 calc(N * var(--cx-u)) 表达 */
+  --cx-u: clamp(1rem, 1.111vw, 1.334rem);
+
   /* radius — restrained 8/12/16px scale */
   --chenxing-radius-sm: 8px;
   --chenxing-radius-md: 12px;
@@ -74,6 +87,7 @@
   --chenxing-z-overlay: 60;    /* 模态遮罩：抽屉遮罩、居中对话框遮罩 */
   --chenxing-z-dialog: 70;     /* 对话框 / 抽屉面板本体 */
   --chenxing-z-popover: 80;    /* 弹出层：自定义 select 列表 */
+  --chenxing-z-toast: 85;      /* 瞬态通知堆叠：盖过弹出层，低于系统 UI */
   --chenxing-z-system: 90;     /* 系统 UI：跳到主内容，聚焦时须盖过一切 */
 
   /* type
@@ -111,15 +125,6 @@ body {
   color: var(--chenxing-foreground);
 }
 
-main {
-  position: relative;
-  min-height: 100vh;
-  /* clip (not hidden): hidden would make this a scroll container and break
-     position: sticky on the topbar; clip crops nebula overflow without that */
-  overflow: clip;
-  background: var(--chenxing-background);
-  isolation: isolate;
-}
 
 .chenxing-auth-layout {
   display: flex;

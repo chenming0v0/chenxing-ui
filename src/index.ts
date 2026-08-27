@@ -21,10 +21,17 @@ export {
   TextAreaField,
   ToggleRow,
   logoUrl,
+  type ChipColor,
 } from './components/ui'
 
 // 下拉选择（ARIA 1.2 combobox）
 export { Select, SelectField, type SelectOption } from './components/select'
+
+// 全局顶栏（漂浮玻璃胶囊 + 胶囊内手风琴汉堡菜单）
+export { Topbar, TopbarAccountPanel, TopbarNavRow, TopbarQuotaCard, useAccordionHeight, useExitDelay, useTopbarExpanded } from './components/topbar'
+
+// 汉堡导航菜单（WAI-ARIA Disclosure Navigation）
+export { NavigationMenu, useNavDisclosure } from './components/navigation-menu'
 
 // 抽屉 / 模态
 export { Drawer, useDrawerFocus } from './components/drawer'
@@ -51,6 +58,12 @@ export { SpaceBackdrop, WarpField } from './components/space'
 
 // 可访问性：跳到主内容
 export { SkipLink, SkipTarget, useSkipTargetId } from './components/skip-link'
+
+// 瞬态通知（侧边滑入的玻璃叠卡堆栈）
+export { ToastProvider, useToast, type ToastFn, type ToastOptions, type ToastPlacement, type ToastTone } from './components/toast'
+
+// 根级错误边界（恢复界面不渲染任何错误详情）
+export { ErrorBoundary } from './components/error-boundary'
 
 // 开场闸门动画
 export { IntroGate } from './components/intro-gate'

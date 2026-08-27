@@ -200,3 +200,16 @@ describe('Button aria-disabled', () => {
     expect(parentClicks).toBe(1)
   })
 })
+
+describe('Chip 语义色变体', () => {
+  it('默认中性色，color 映射到对应变体类', () => {
+    render(<Chip>Default</Chip>)
+    expect(screen.getByText('Default').className).toContain('chenxing-chip-default')
+    cleanup()
+    for (const color of ['accent', 'success', 'warning', 'danger'] as const) {
+      render(<Chip color={color}>{color}</Chip>)
+      expect(screen.getByText(color).className).toContain(`chenxing-chip-${color}`)
+      cleanup()
+    }
+  })
+})

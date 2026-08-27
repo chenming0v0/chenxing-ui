@@ -119,16 +119,24 @@ export function Badge({ children, tone = 'neutral' }: { children: ReactNode; ton
   return <span className={cls}>{children}</span>
 }
 
-export function Chip({ children, onRemove }: { children: ReactNode; onRemove?: () => void }) {
+export type ChipColor = 'default' | 'accent' | 'success' | 'warning' | 'danger'
+
+export function Chip({ children, color = 'default', onRemove }: {
+  children: ReactNode
+  /** 语义色：default 中性灰 / accent 青 / success 绿 / warning 琥珀 / danger 红 */
+  color?: ChipColor
+  onRemove?: () => void
+}) {
   return (
-    <span className="chenxing-chip">
+    <span className={`chenxing-chip chenxing-chip-${color}${onRemove ? ' is-removable' : ''}`}>
       {children}
       {onRemove ? (
         /* 视觉上仍是紧凑的 12px 图标，但命中区保证 24x24（WCAG 2.5.8）：
-           负外边距让 24px 按钮从 chip 的内容盒向外扩展，不撑大 chip 本体。 */
+           chip 固定高 28px，24px 按钮完整嵌在内容盒里；is-removable 收窄右内边距，
+           让按钮视觉上融入胶囊尾部，而不是靠负外边距挤出去。 */
         <button
           type="button"
-          className="-my-1 -mr-2 ml-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[var(--chenxing-cyan)] transition-colors hover:bg-[var(--chenxing-muted)]"
+          className="chenxing-chip-remove flex h-6 w-6 shrink-0 cursor-pointer items-center justify-center rounded-full"
           onClick={onRemove}
           aria-label="移除"
         >

@@ -14,6 +14,8 @@
 | 空间背景 `components/space` | `SpaceBackdrop`、`WarpField` |
 | 可访问性 `components/skip-link` | `SkipLink`、`SkipTarget` |
 | 开场动画 `components/intro-gate` | `IntroGate` |
+| 壳层 `components/topbar` `navigation-menu` `error-boundary` | `Topbar` / `TopbarNavRow` / `TopbarAccountPanel` / `TopbarQuotaCard`、`NavigationMenu` / `useNavDisclosure`、`ErrorBoundary` |
+| 瞬态通知 `components/toast` | `ToastProvider` / `useToast`（HeroUI 风格叠卡堆栈，玻璃卡片，侧边滑入） |
 | 头像编辑 `components/avatar-editor` `avatar-crop` | `AvatarEditor` 及裁剪纯函数 |
 | 样式 `styles/` | `foundation.css`（令牌）、`components.css`、`controls.css`、`extras.css`、聚合入口 `index.css` |
 
@@ -29,7 +31,7 @@
 
 ## 有意不包含
 
-- 应用外壳（`shells-*`：`ConsoleLayout`、`GlobalTopbar`、`AuthShell` 等）与 `ErrorBoundary` —— 它们耦合 chenxing-auth 的路由、认证态与 API 层，解耦（导航/用户信息改为 props 注入）后再入库。
+- 其余应用外壳（`shells-*`：`ConsoleLayout`、`AuthShell` 等）—— 它们耦合 chenxing-auth 的路由、认证态与 API 层，解耦（导航/用户信息改为 props 注入）后再入库。`GlobalTopbar` 已解耦为 `Topbar`（含头像账户菜单插槽）入库。
 - 页面级样式（`oauth.css`、`landing.css` 的其余部分、shell 布局 CSS）。
 
 ## 开发
