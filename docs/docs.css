@@ -1,0 +1,116 @@
+/* 组件展示站样式入口。
+   组件 TSX 依赖 Tailwind 工具类与 @theme 令牌映射，这里演示了消费方
+   接入本库的完整方式：tailwindcss + @source 扫描库源码 + 库样式 + 字体。 */
+@import "tailwindcss";
+@source "../src";
+@source "./";
+@import "./fonts.css";
+@import "../src/styles/index.css";
+
+/* Tailwind 令牌映射（与 chenxing-auth web/src/index.css 保持一致） */
+@theme inline {
+  --color-background: var(--chenxing-background);
+  --color-foreground: var(--chenxing-foreground);
+  --color-card: var(--chenxing-card);
+  --color-card-foreground: var(--chenxing-card-foreground);
+  --color-popover: var(--chenxing-popover);
+  --color-popover-foreground: var(--chenxing-popover-foreground);
+  --color-primary: var(--chenxing-primary);
+  --color-primary-foreground: var(--chenxing-primary-foreground);
+  --color-muted: var(--chenxing-muted);
+  --color-muted-foreground: var(--chenxing-muted-foreground);
+  --color-border: var(--chenxing-border);
+  --color-input: var(--chenxing-input);
+  --color-ring: var(--chenxing-ring);
+  --radius-sm: var(--chenxing-radius-sm);
+  --radius-md: var(--chenxing-radius-md);
+  --radius-lg: var(--chenxing-radius-lg);
+  --radius-xl: var(--chenxing-radius-xl);
+}
+
+@layer base {
+  * { box-sizing: border-box; }
+  html, body, #root { min-height: 100%; }
+  body {
+    margin: 0;
+    min-width: 320px;
+    background: var(--chenxing-background);
+    color: var(--chenxing-foreground);
+    font-family: var(--chenxing-font-body);
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+  }
+  a { color: inherit; text-decoration: none; }
+  button, input, select, textarea { font: inherit; color: inherit; }
+  button { background: none; border: 0; }
+  button, a { -webkit-tap-highlight-color: transparent; cursor: pointer; }
+  button:disabled { cursor: not-allowed; opacity: 0.55; }
+  button:focus-visible,
+  a:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible {
+    outline: 2px solid var(--chenxing-cyan);
+    outline-offset: 3px;
+  }
+}
+
+/* ---------- 展示站布局 ---------- */
+.docs-shell {
+  display: flex;
+  gap: 2.5rem;
+  max-width: 80rem;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem 7rem;
+}
+.docs-sidebar {
+  display: none;
+  position: sticky;
+  top: 2.5rem;
+  align-self: flex-start;
+  width: 13rem;
+  flex-shrink: 0;
+}
+@media (min-width: 1024px) {
+  .docs-sidebar { display: block; }
+}
+.docs-nav-link {
+  display: block;
+  padding: 0.45rem 0.75rem;
+  border-radius: var(--chenxing-radius-sm);
+  font-size: 0.875rem;
+  color: var(--chenxing-muted-foreground);
+  transition: color 0.15s ease, background 0.15s ease;
+}
+.docs-nav-link:hover {
+  color: var(--chenxing-foreground);
+  background: var(--chenxing-muted);
+}
+.docs-section { scroll-margin-top: 2rem; }
+.docs-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+}
+@media (min-width: 768px) {
+  .docs-grid { grid-template-columns: repeat(2, 1fr); }
+  .docs-card-wide { grid-column: span 2; }
+}
+
+/* 卡片内的实时预览区：居中摆放组件，弱网格底纹与库背景区分 */
+.docs-preview {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.85rem;
+  min-height: 9rem;
+  padding: 1.25rem;
+  border-radius: var(--chenxing-radius-md);
+  border: 1px solid var(--chenxing-border);
+  background:
+    linear-gradient(rgba(125, 211, 252, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(125, 211, 252, 0.035) 1px, transparent 1px),
+    rgba(4, 8, 16, 0.45);
+  background-size: 22px 22px, 22px 22px, auto;
+}

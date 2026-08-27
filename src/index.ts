@@ -20,6 +20,7 @@ export {
   Switch,
   TextAreaField,
   ToggleRow,
+  logoUrl,
 } from './components/ui'
 
 // 下拉选择（ARIA 1.2 combobox）
