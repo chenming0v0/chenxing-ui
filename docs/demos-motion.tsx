@@ -32,13 +32,18 @@ function IntroGateDemo() {
 
 function CountUpDemo() {
   const [run, setRun] = useState(0)
+  const reduced = usePrefersReducedMotion()
   return (
     <div className="flex flex-col items-center gap-3">
       <div key={run} className="flex flex-wrap items-baseline justify-center gap-6">
         <p className="chenxing-h1"><CountUp target={99.95} decimals={2} suffix="%" /></p>
         <p className="chenxing-h1"><CountUp target={128034} grouping /></p>
       </div>
-      <Button variant="ghost" icon="rotate-ccw" onClick={() => setRun(run + 1)}>重播</Button>
+      {reduced ? (
+        <p className="chenxing-caption">系统已开启「减少动态效果」，数字直接显示终值，重播不生效。</p>
+      ) : (
+        <Button variant="ghost" icon="rotate-ccw" onClick={() => setRun(run + 1)}>重播</Button>
+      )}
     </div>
   )
 }
