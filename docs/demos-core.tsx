@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import {
-  Avatar, Badge, BrandLockup, BrandMark, Button, Chip, CopyValue, EmptyState, Icon, NavigationMenu, Notice, PageIntro,
+  Avatar, Badge, BrandLockup, BrandMark, Button, Chip, CopyValue, EmptyState, Icon, Notice, PageIntro,
 } from '../src'
 import type { DemoEntry } from './registry'
 
@@ -24,17 +24,6 @@ function ChipDemo() {
         ) : null}
       </div>
     </div>
-  )
-}
-
-function NavigationMenuDemo() {
-  return (
-    <NavigationMenu label="打开导航菜单">
-      <a className="chenxing-menu-item" href="#/c/navigation-menu"><Icon name="rocket" size={16} />主页</a>
-      <a className="chenxing-menu-item" href="#/c/navigation-menu"><Icon name="layout-dashboard" size={16} />控制台</a>
-      <a className="chenxing-menu-item" href="#/c/navigation-menu"><Icon name="code-2" size={16} />开发者</a>
-      <span className="chenxing-menu-item is-static"><Icon name="store" size={16} />应用广场</span>
-    </NavigationMenu>
   )
 }
 
@@ -93,14 +82,6 @@ export const PRIMITIVE_ENTRIES: DemoEntry[] = [
     description: '紧凑标签：default / accent / success / warning / danger 五种语义色，可带移除按钮（命中区保证 24×24）。',
     wide: true,
     Demo: ChipDemo,
-  },
-  {
-    slug: 'navigation-menu',
-    name: 'NavigationMenu',
-    description: '汉堡导航菜单：三条细杠开合动画 + 全屏遮罩 + 玻璃面板，方向键循环聚焦，Escape 关闭并交还焦点。',
-    imports: ['NavigationMenu', 'useNavDisclosure'],
-    bare: true,
-    Demo: NavigationMenuDemo,
   },
   {
     slug: 'icon',

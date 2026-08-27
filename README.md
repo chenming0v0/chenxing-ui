@@ -14,7 +14,7 @@
 | 空间背景 `components/space` | `SpaceBackdrop`、`WarpField` |
 | 可访问性 `components/skip-link` | `SkipLink`、`SkipTarget` |
 | 开场动画 `components/intro-gate` | `IntroGate` |
-| 壳层 `components/topbar` `navigation-menu` `error-boundary` | `Topbar` / `TopbarNavRow` / `TopbarAccountPanel` / `TopbarQuotaCard`、`NavigationMenu` / `useNavDisclosure`、`ErrorBoundary` |
+| 壳层 `components/topbar` `error-boundary` | `Topbar` / `TopbarNavRow` / `TopbarAccountPanel` / `TopbarQuotaCard` / `useNavDisclosure`、`ErrorBoundary` |
 | 瞬态通知 `components/toast` | `ToastProvider` / `useToast`（HeroUI 风格叠卡堆栈，玻璃卡片，侧边滑入） |
 | 头像编辑 `components/avatar-editor` `avatar-crop` | `AvatarEditor` 及裁剪纯函数 |
 | 样式 `styles/` | `foundation.css`（令牌）、`components.css`、`controls.css`、`extras.css`、聚合入口 `index.css` |

@@ -69,7 +69,7 @@ function ComponentPage({ category, entry }: { category: DemoCategory; entry: Dem
       <pre className="docs-code mt-3"><code>{`import { ${imports.join(', ')} } from '@chenxing/ui'`}</code></pre>
       <h2 className="chenxing-h3 mt-8">演示</h2>
       {/* 组件页预览不套 HudPanel：玻璃卡的 backdrop-filter 会成为 fixed
-          后代的包含块，把全屏遮罩困在卡内（NavigationMenu 等） */}
+          后代的包含块，把全屏遮罩困在卡内（Topbar 遮罩等） */}
       <div className="docs-preview docs-preview-page mt-3">
         <Demo />
       </div>

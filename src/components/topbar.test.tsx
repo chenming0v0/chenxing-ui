@@ -79,6 +79,46 @@ describe('Topbar 胶囊抽屉', () => {
   })
 })
 
+describe('Topbar 汉堡键盘导航', () => {
+  const focusableRows = () =>
+    Array.from(document.querySelectorAll<HTMLElement>('.cx-nav-row')).filter(
+      (el) => el.tagName === 'A' || el.tagName === 'BUTTON',
+    )
+
+  it('触发器上 ArrowDown 打开抽屉并把焦点移到第一个可聚焦菜单行', () => {
+    renderTopbar()
+    trigger().focus()
+    fireEvent.keyDown(trigger(), { key: 'ArrowDown' })
+    expect(trigger().getAttribute('aria-expanded')).toBe('true')
+    const first = focusableRows()[0]
+    expect(first).toBeTruthy()
+    expect(document.activeElement).toBe(first)
+    expect(first.textContent).toContain('主页')
+  })
+
+  it('面板内 ArrowDown/ArrowUp 循环聚焦，Home/End 跳首尾', () => {
+    renderTopbar()
+    trigger().focus()
+    fireEvent.keyDown(trigger(), { key: 'ArrowDown' })
+    const panel = document.querySelector('.cx-nav-panel')!
+    const items = focusableRows()
+    expect(items).toHaveLength(2)
+    expect(document.activeElement).toBe(items[0])
+
+    fireEvent.keyDown(panel, { key: 'ArrowDown' })
+    expect(document.activeElement).toBe(items[1])
+
+    fireEvent.keyDown(panel, { key: 'ArrowUp' })
+    expect(document.activeElement).toBe(items[0])
+
+    fireEvent.keyDown(panel, { key: 'End' })
+    expect(document.activeElement).toBe(items[1])
+
+    fireEvent.keyDown(panel, { key: 'Home' })
+    expect(document.activeElement).toBe(items[0])
+  })
+})
+
 function renderTopbarWithAccount() {
   return render(
     <Topbar

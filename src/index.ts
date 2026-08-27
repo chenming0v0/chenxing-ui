@@ -28,10 +28,7 @@ export {
 export { Select, SelectField, type SelectOption } from './components/select'
 
 // 全局顶栏（漂浮玻璃胶囊 + 胶囊内手风琴汉堡菜单）
-export { Topbar, TopbarAccountPanel, TopbarNavRow, TopbarQuotaCard, useAccordionHeight, useExitDelay, useTopbarExpanded } from './components/topbar'
-
-// 汉堡导航菜单（WAI-ARIA Disclosure Navigation）
-export { NavigationMenu, useNavDisclosure } from './components/navigation-menu'
+export { Topbar, TopbarAccountPanel, TopbarNavRow, TopbarQuotaCard, useAccordionHeight, useExitDelay, useNavDisclosure, useTopbarExpanded } from './components/topbar'
 
 // 抽屉 / 模态
 export { Drawer, useDrawerFocus } from './components/drawer'

@@ -380,11 +380,7 @@ td.chenxing-label {
   background: linear-gradient(90deg, transparent, var(--chenxing-border-strong), transparent);
 }
 
-/* ---------- navigation menu（汉堡导航，WAI-ARIA disclosure） ---------- */
-.chenxing-nav-menu {
-  position: relative;
-  display: inline-flex;
-}
+/* ---------- hamburger trigger & menu rows（Topbar 抽屉与账户面板复用） ---------- */
 /* 三根等长细条，无边框无底色（裸汉堡）；条本身 16x2px 远低于 WCAG 2.5.8
    目标尺寸下限，命中区靠 40x40 的透明按钮补足。 */
 .chenxing-hamburger {
@@ -412,40 +408,6 @@ td.chenxing-label {
 .chenxing-hamburger:hover span,
 .chenxing-hamburger:focus-visible span { background: var(--chenxing-cyan); }
 
-/* 遮罩只负责压暗并模糊背景。默认不拦截指针：关闭后它是透明层，
-   若仍可命中就会吞掉页面点击；打开（is-open）时才恢复命中。 */
-.chenxing-nav-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: var(--chenxing-z-menu);
-  background: rgba(2, 4, 10, 0.55);
-  backdrop-filter: blur(12px) saturate(1.2);
-  -webkit-backdrop-filter: blur(12px) saturate(1.2);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.35s cubic-bezier(0.165, 0.84, 0.44, 1);
-}
-.chenxing-nav-overlay.is-open { opacity: 1; pointer-events: auto; }
-
-/* 玻璃面板：挂在触发器下方，与遮罩同层、DOM 在后故压在遮罩之上；
-   封顶高度 + 内滚，dvh 兜住移动端地址栏伸缩。 */
-.chenxing-nav-panel {
-  position: absolute;
-  top: calc(100% + 0.5rem);
-  right: 0;
-  z-index: var(--chenxing-z-menu);
-  min-width: 13rem;
-  max-height: min(calc(100dvh - 6rem), 34rem);
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  padding: 0.4rem;
-  background: var(--chenxing-popover);
-  backdrop-filter: blur(18px) saturate(1.2);
-  -webkit-backdrop-filter: blur(18px) saturate(1.2);
-  border: 1px solid var(--chenxing-border-strong);
-  border-radius: var(--chenxing-radius-md);
-  box-shadow: var(--chenxing-shadow-overlay);
-}
 /* 面板内的导航行：链接/按钮通用 */
 .chenxing-menu-item {
   display: flex;
@@ -467,7 +429,6 @@ td.chenxing-label {
 
 @media (prefers-reduced-motion: reduce) {
   .chenxing-hamburger span,
-  .chenxing-nav-overlay,
   .chenxing-menu-item { transition: none; }
 }
 
