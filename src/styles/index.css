@@ -1,0 +1,12 @@
+/* 辰星设计体系 · 样式入口
+   使用方式（消费方入口 CSS）：
+     @import "@chenxing/ui/styles.css";
+   注意：组件 TSX 中同时使用 Tailwind 工具类，消费方需运行 Tailwind v4
+   并在入口 CSS 声明扫描本包源码：
+     @source "../node_modules/@chenxing/ui/src";
+   字体（Orbitron / 正文字体 woff2）不由本包托管，由消费方按
+   foundation.css 中的 --chenxing-font-* 变量自行提供。 */
+@import "./foundation.css";
+@import "./components.css";
+@import "./controls.css";
+@import "./extras.css";

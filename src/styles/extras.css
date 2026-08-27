@@ -1,0 +1,196 @@
+/* ---------- global skip-to-content (#225) ---------- */
+/* 键盘可达的「跳到主内容」：链接常驻 DOM 但不可见，:focus-visible 时从视口
+   顶部滑入。用系统 UI 层（--chenxing-z-system，90），高于导航（40）、菜单
+   （50）、抽屉/对话框（70）与 select 弹出层（80）：无论什么模态层打开，
+   键盘用户聚焦跳过链接时它都永远在最上面。
+   不用玻璃卡片样式：半透明 popover 表面 + cyan 描边与光晕，全部沿用现有令牌；
+   focus ring 由 index.css 的全局 :focus-visible 规则提供。 */
+.chenxing-skip-link {
+  position: fixed;
+  top: 0.85rem;
+  left: 50%;
+  z-index: var(--chenxing-z-system);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 1.1rem;
+  font-family: var(--chenxing-font-body);
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  color: var(--chenxing-cyan);
+  background: var(--chenxing-popover);
+  border: 1px solid rgba(103, 232, 249, 0.4);
+  border-radius: var(--chenxing-radius-pill);
+  box-shadow: 0 0 20px rgba(103, 232, 249, 0.22), var(--chenxing-shadow-overlay);
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, calc(-100% - 1.5rem));
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.18s ease;
+}
+.chenxing-skip-link:focus-visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(-50%, 0);
+}
+/* 内容锚点：高度为 0 的标记，不参与布局；键盘聚焦时浏览器把它滚进视口，
+   scroll-margin-top 保证从页面下方触发时也落在 sticky topbar 之下。 */
+.chenxing-skip-target {
+  scroll-margin-top: 5rem;
+}
+
+
+/* ---------- console shell: avatar (rounded-rect) + dropdown ---------- */
+.chenxing-avatar {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+  /* 头像图片靠容器裁切来贴合圆角，因此必须裁掉溢出内容 */
+  overflow: hidden;
+  flex-shrink: 0;
+  border-radius: var(--chenxing-radius-md);
+  font-family: var(--chenxing-font-display);
+  font-weight: 700;
+  color: var(--chenxing-ice);
+  /* 品牌深空蓝渐变 + 青色描边光晕（原粉紫渐变与整站天蓝/冰青体系冲突） */
+  background: linear-gradient(135deg, #123a63, #155e8a 55%, #0e7d92);
+  box-shadow: 0 0 0 1px rgba(103, 232, 249, 0.35), 0 0 14px rgba(56, 189, 248, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.22);
+}
+/* 头像图已是方图，object-fit 只作为非方图落库时的兜底，避免拉伸变形 */
+.chenxing-avatar-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+/* 可上传头像：悬停或聚焦时浮出相机蒙层，提示这里可点 */
+.chenxing-avatar-editable { cursor: pointer; padding: 0; }
+.chenxing-avatar-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  color: #fff;
+  background: rgba(2, 5, 12, 0.62);
+  opacity: 0;
+  transition: opacity 0.18s ease;
+}
+.chenxing-avatar-editable:hover .chenxing-avatar-overlay,
+.chenxing-avatar-editable:focus-visible .chenxing-avatar-overlay { opacity: 1; }
+@media (prefers-reduced-motion: reduce) {
+  .chenxing-avatar-overlay { transition: none; }
+}
+
+/* ---------- console shell: toggle switch ---------- */
+.chenxing-switch {
+  position: relative;
+  display: inline-flex;
+  width: 3rem;
+  height: 1.6rem;
+  flex-shrink: 0;
+  padding: 0.2rem;
+  background: rgba(4, 8, 16, 0.7);
+  border: 1px solid var(--chenxing-input);
+  border-radius: var(--chenxing-radius-pill);
+  transition: background 0.2s, border-color 0.2s;
+  cursor: pointer;
+}
+.chenxing-switch::after {
+  content: "";
+  width: 1.1rem;
+  height: 1.1rem;
+  border-radius: 9999px;
+  background: var(--chenxing-muted-foreground);
+  transition: transform 0.2s, background 0.2s;
+}
+.chenxing-switch.is-on { border-color: var(--chenxing-primary); background: var(--chenxing-primary-soft); }
+.chenxing-switch.is-on::after { transform: translateX(1.4rem); background: var(--chenxing-cyan); box-shadow: 0 0 10px rgba(103, 232, 249, 0.7); }
+
+/* ---------- keyframes ---------- */
+@keyframes chenxing-shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+
+/* ---------- background layers ---------- */
+.chenxing-nebula {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(110px);
+  pointer-events: none;
+}
+.chenxing-grid {
+  background-image:
+    linear-gradient(rgba(125, 211, 252, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(125, 211, 252, 0.05) 1px, transparent 1px);
+  background-size: 44px 44px;
+  -webkit-mask-image: radial-gradient(ellipse 90% 70% at 50% 35%, black 25%, transparent 78%);
+  mask-image: radial-gradient(ellipse 90% 70% at 50% 35%, black 25%, transparent 78%);
+}
+.chenxing-vignette {
+  background: radial-gradient(ellipse 120% 90% at 50% 0%, transparent 55%, rgba(1, 3, 8, 0.6) 100%);
+}
+
+/* ---------- console shell: brand lockup ---------- */
+/* logo.png + aurora wordmark used in console topbar and landing header */
+.chenxing-brand-logo {
+  width: 2.5rem;
+  height: 2.5rem;
+  object-fit: contain;
+  border-radius: var(--chenxing-radius-md);
+  filter: drop-shadow(0 0 10px rgba(56, 189, 248, 0.45));
+}
+.chenxing-wordmark {
+  font-family: var(--chenxing-font-display);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1.05;
+}
+
+
+/* ---------- 开场闸门 ----------
+   整屏盖板：计数进度条 + 右下角读数，100% 后整体上滑揭示页面。 */
+.cx-intro {
+  position: fixed;
+  inset: 0;
+  z-index: var(--chenxing-z-system);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--chenxing-background);
+  transition: transform 0.78s cubic-bezier(0.76, 0, 0.24, 1);
+}
+.cx-intro.is-leaving {
+  transform: translateY(-100%);
+}
+.cx-intro-tag {
+  position: absolute;
+  top: 1.2rem;
+  left: 1.4rem;
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--chenxing-muted-foreground);
+}
+.cx-intro-count {
+  font-size: clamp(3rem, 9vw, 6.5rem);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--chenxing-foreground);
+  font-variant-numeric: tabular-nums;
+}
+.cx-intro-bar {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 2px;
+  transform-origin: left center;
+  background: linear-gradient(90deg, var(--chenxing-primary), var(--chenxing-cyan));
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.6);
+  transition: transform 0.1s linear;
+}
+
