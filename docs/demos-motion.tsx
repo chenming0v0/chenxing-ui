@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import {
-  Button, CountUp, DrawLine, IntroGate, Reveal, ScrambleText, Switch, Typewriter, WarpField,
+  Button, CountUp, DrawLine, IntroGate, Notice, Reveal, ScrambleText, Switch, Typewriter, WarpField,
+  usePrefersReducedMotion,
 } from '../src'
 import { DemoCard, Section } from './demo-card'
 
@@ -29,9 +30,33 @@ function IntroGateDemo() {
   )
 }
 
+function CountUpDemo() {
+  const [run, setRun] = useState(0)
+  return (
+    <div className="flex flex-col items-center gap-3">
+      <div key={run} className="flex flex-wrap items-baseline justify-center gap-6">
+        <p className="chenxing-h1"><CountUp target={99.95} decimals={2} suffix="%" /></p>
+        <p className="chenxing-h1"><CountUp target={128034} grouping /></p>
+      </div>
+      <Button variant="ghost" icon="rotate-ccw" onClick={() => setRun(run + 1)}>重播</Button>
+    </div>
+  )
+}
+
 export function MotionSection() {
+  const reduced = usePrefersReducedMotion()
   return (
     <Section id="motion" title="动效" blurb="滚动与入场动效原语，均响应 prefers-reduced-motion。">
+      {reduced ? (
+        <div className="docs-card-wide">
+          <Notice tone="warning">
+            检测到系统开启了「减少动态效果」（prefers-reduced-motion）。CountUp 与 Typewriter
+            按无障碍设计直接显示终态、不播放动画——这是预期行为，不是缺陷。想预览完整动效，
+            请关闭系统的减少动画设置（Windows：设置 → 辅助功能 → 视觉效果 → 动画效果；
+            macOS：辅助功能 → 显示 → 减弱动态效果），或在 DevTools 渲染面板中取消模拟。
+          </Notice>
+        </div>
+      ) : null}
       <DemoCard name="Reveal" description="进入视口后渐现：rise 整体上移淡入，mask 行揭示。">
         <div className="flex flex-col items-center gap-2">
           <Reveal><p className="chenxing-body">rise：整体上移淡入</p></Reveal>
@@ -39,12 +64,7 @@ export function MotionSection() {
         </div>
       </DemoCard>
       <DemoCard name="CountUp" description="进入视口后数字滚动到目标值，reduced-motion 时直落终值。">
-        <p className="chenxing-h1">
-          <CountUp target={99.95} decimals={2} suffix="%" />
-        </p>
-        <p className="chenxing-h1">
-          <CountUp target={128034} grouping />
-        </p>
+        <CountUpDemo />
       </DemoCard>
       <DemoCard name="Typewriter" description="多词循环打字机，附终端光标。">
         <p className="chenxing-h2">
