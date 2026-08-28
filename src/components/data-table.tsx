@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react'
+import type { ButtonHTMLAttributes, ReactNode } from 'react'
 import { Button, HudPanel, Icon } from './ui'
 
 /**
@@ -25,6 +25,8 @@ type DataTableProps = {
    * 无数据时渲染的内容，自动跨满所有列。
    * 「加载中 / 空结果 / 无权限」文案由调用方判断，组件只负责摆放位置，
    * 因此有数据时传 null。
+   * 约定：加载中传「正在加载××。」句号结尾的字符串；确认为空传 EmptyState，
+   * 让所有表格的加载与空态保持同一形态。
    */
   empty?: ReactNode
   /** <tbody> 内容，由调用方渲染 <tr>；单元格无需再写 padding 与分隔线 */
@@ -115,6 +117,34 @@ export function TablePanel({ icon, title, description, action, notice, children,
       {notice ? <div className="mt-4">{notice}</div> : null}
       {children}
     </HudPanel>
+  )
+}
+
+type RowActionProps = ButtonHTMLAttributes<HTMLButtonElement> & {
+  /** danger 用于禁用、删除等破坏性操作，文字使用错误色 */
+  tone?: 'default' | 'danger'
+}
+
+/**
+ * 行内操作的唯一形态：文字链接（chenxing-link + chenxing-row-action）。
+ * 胶囊 Button 只留给表格外的页面级操作；操作列一律用 RowAction，
+ * 否则同一个「禁用」会在一个页面是红色大按钮、另一个页面是文字链接。
+ */
+export function RowAction({ tone = 'default', className = '', ...props }: RowActionProps) {
+  const toneClass = tone === 'danger' ? ' chenxing-row-action-danger' : ''
+  return <button type="button" className={`chenxing-link chenxing-row-action${toneClass} ${className}`} {...props} />
+}
+
+/**
+ * 操作列单元格：统一右对齐（列头用 `{ label: '操作', align: 'right' }` 时
+ * 单元格必须跟着右对齐），并吞掉点击冒泡——可点击行里的操作不应同时触发
+ * 行点击。非可点击行上 stopPropagation 无害，因此不做开关，少一个特殊情况。
+ */
+export function RowActions({ children, className = '' }: { children: ReactNode; className?: string }) {
+  return (
+    <td className={`text-right ${className}`} onClick={(event) => event.stopPropagation()}>
+      <div className="inline-flex flex-wrap items-center justify-end gap-2">{children}</div>
+    </td>
   )
 }
 

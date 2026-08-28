@@ -374,6 +374,11 @@ td.chenxing-label {
   transition: background 0.15s;
 }
 .chenxing-row-action:hover { background: var(--chenxing-muted); }
+.chenxing-row-action:disabled { opacity: 0.5; cursor: not-allowed; background: none; }
+/* danger 变体：破坏性行操作用错误色；hover 提升特异性，
+   否则 .chenxing-link:hover 的青色会盖掉错误色 */
+.chenxing-row-action-danger,
+.chenxing-row-action-danger:hover { color: var(--chenxing-error); }
 
 .chenxing-divider {
   height: 1px;

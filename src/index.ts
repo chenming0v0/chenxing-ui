@@ -17,6 +17,7 @@ export {
   Notice,
   PageIntro,
   PasswordField,
+  SearchField,
   Switch,
   TextAreaField,
   ToggleRow,
@@ -36,7 +37,7 @@ export { activateDrawerModal } from './components/drawer-modal-effects'
 export { useModalFocus } from './components/modal'
 
 // 数据表
-export { DataTable, TablePagination, TablePanel, type DataTableColumn } from './components/data-table'
+export { DataTable, RowAction, RowActions, TablePagination, TablePanel, type DataTableColumn } from './components/data-table'
 
 // 动效原语
 export {

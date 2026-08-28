@@ -207,9 +207,9 @@ export function Notice({ children, tone = 'info' }: { children: ReactNode; tone?
   )
 }
 
-export function FieldShell({ icon, trailing, error, children }: { icon?: string; trailing?: ReactNode; error?: boolean; children: ReactNode }) {
+export function FieldShell({ icon, trailing, error, className = '', children }: { icon?: string; trailing?: ReactNode; error?: boolean; className?: string; children: ReactNode }) {
   return (
-    <div className={`chenxing-field-shell${error ? ' chenxing-field-error' : ''}`}>
+    <div className={`chenxing-field-shell${error ? ' chenxing-field-error' : ''}${className ? ` ${className}` : ''}`}>
       {icon ? <Icon name={icon} className="chenxing-field-icon h-4 w-4" size={16} /> : null}
       {children}
       {trailing}
@@ -285,6 +285,25 @@ export function PasswordField({ label, icon, hint, error, errorText, autoComplet
         </button>
       }
     />
+  )
+}
+
+type SearchFieldProps = Omit<InputHTMLAttributes<HTMLInputElement>, 'onKeyDown'> & {
+  /** 回车触发的查询动作；「查询」按钮由调用方摆在旁边 */
+  onSearch?: () => void
+  /** 外壳（宽度等）样式；默认与列表工具栏的搜索框同宽 */
+  shellClassName?: string
+}
+
+/**
+ * 列表工具栏搜索框：field-shell + 搜索图标 + 回车查询。
+ * clients / users 等表格页原本各自手拼同一段结构，收口到这里。
+ */
+export function SearchField({ onSearch, shellClassName = 'w-full sm:w-72', ...props }: SearchFieldProps) {
+  return (
+    <FieldShell icon="search" className={shellClassName}>
+      <input {...props} onKeyDown={(event) => { if (event.key === 'Enter') onSearch?.() }} />
+    </FieldShell>
   )
 }
 

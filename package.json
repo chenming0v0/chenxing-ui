@@ -1,6 +1,6 @@
 {
   "name": "@chenxing/ui",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": false,
   "type": "module",
   "description": "天穹辰星 · 辰星设计体系组件库（React + 玻璃拟态 HUD 风格）",

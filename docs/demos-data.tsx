@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import {
-  AvatarEditor, Button, DataTable, Drawer, Field, HudPanel, Notice, TablePagination, TablePanel,
+  AvatarEditor, Button, DataTable, Drawer, Field, HudPanel, Notice, RowAction, RowActions, TablePagination, TablePanel,
   type SourceSize, logoUrl,
 } from '../src'
 import type { DemoEntry } from './registry'
@@ -84,12 +84,16 @@ function TableDemo() {
         action={<Button variant="ghost" icon="user-plus">新建用户</Button>}
         notice={page === 3 ? <Notice tone="warning">这是最后一页。</Notice> : null}
       >
-        <DataTable columns={['用户', '邮箱', { label: '状态', align: 'right' }]}>
+        <DataTable columns={['用户', '邮箱', '状态', { label: '操作', align: 'right' }]}>
           {USERS.map((user) => (
             <tr key={user.name}>
               <td className="chenxing-body text-sm font-semibold">{user.name}</td>
               <td className="chenxing-caption">{user.email}</td>
-              <td className="chenxing-caption text-right">{user.status}</td>
+              <td className="chenxing-caption">{user.status}</td>
+              <RowActions>
+                <RowAction onClick={() => {}}>编辑</RowAction>
+                <RowAction tone="danger" onClick={() => {}}>禁用</RowAction>
+              </RowActions>
             </tr>
           ))}
         </DataTable>
@@ -115,8 +119,8 @@ export const DATA_ENTRIES: DemoEntry[] = [
   {
     slug: 'table',
     name: 'TablePanel + DataTable + TablePagination',
-    description: '表格三件套：面板外框、列定义与空态、统一分页栏。',
-    imports: ['TablePanel', 'DataTable', 'TablePagination'],
+    description: '表格三件套：面板外框、列定义与空态、统一分页栏；行内操作用 RowActions + RowAction 文字链接。',
+    imports: ['TablePanel', 'DataTable', 'TablePagination', 'RowActions', 'RowAction'],
     wide: true,
     Demo: TableDemo,
   },
