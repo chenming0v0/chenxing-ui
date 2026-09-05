@@ -38,6 +38,7 @@ export { Topbar, TopbarAccountPanel, TopbarNavRow, TopbarQuotaCard, useAccordion
 export { Drawer, useDrawerFocus } from './components/drawer'
 export { activateDrawerModal } from './components/drawer-modal-effects'
 export { useModalFocus } from './components/modal'
+export { ModalOverlay, type ModalOverlayProps } from './components/modal-overlay'
 
 // 数据表
 export { DataTable, RowAction, RowActions, TablePagination, TablePanel, type DataTableColumn } from './components/data-table'
