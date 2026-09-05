@@ -4,7 +4,7 @@ import { PROPS } from './props'
 const SOURCE_FILES: Record<string, string> = {
   'flow-gold-text': 'flow-gold-text.tsx',
   'tag-input-field': 'tag-input.tsx', select: 'select.tsx', 'select-field': 'select.tsx',
-  'settings-action-row': 'settings-action-row.tsx', table: 'data-table.tsx', drawer: 'drawer.tsx',
+  'settings-action-row': 'settings-action-row.tsx', 'session-item': 'session-item.tsx', table: 'data-table.tsx', drawer: 'drawer.tsx',
   'avatar-editor': 'avatar-editor.tsx', reveal: 'motion.tsx', 'count-up': 'motion.tsx',
   typewriter: 'motion.tsx', 'scramble-text': 'motion.tsx', 'draw-line': 'motion.tsx',
   'warp-field': 'space.tsx', 'space-backdrop': 'space.tsx', 'intro-gate': 'intro-gate.tsx',

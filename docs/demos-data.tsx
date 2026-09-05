@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import {
   AvatarEditor, Badge, Button, DataTable, Drawer, Field, HudPanel, Notice, RowAction, RowActions, SettingsActionRow,
-  TablePagination, TablePanel,
+  SessionItem, TablePagination, TablePanel,
   type SourceSize, logoUrl,
 } from '../src'
 import type { DemoEntry } from './registry'
@@ -104,6 +104,27 @@ function TableDemo() {
   )
 }
 
+function SessionItemDemo() {
+  return (
+    <div className="w-full">
+      <SessionItem
+        icon="monitor"
+        title="Windows · Chrome"
+        status={<Badge tone="success">当前会话</Badge>}
+        description="上海 · 最近活动于刚刚"
+        actions={<Button variant="ghost" icon="log-out">退出会话</Button>}
+      />
+      <SessionItem
+        icon="smartphone"
+        title="iPhone 15 · Safari"
+        status={<Badge>已认证</Badge>}
+        description="杭州 · 最近活动于 2 小时前"
+        actions={<Button variant="danger" icon="unlink">撤销访问</Button>}
+      />
+    </div>
+  )
+}
+
 export const DATA_ENTRIES: DemoEntry[] = [
   {
     slug: 'hud-panel',
@@ -154,6 +175,14 @@ export const DATA_ENTRIES: DemoEntry[] = [
     imports: ['TablePanel', 'DataTable', 'TablePagination', 'RowActions', 'RowAction'],
     wide: true,
     Demo: TableDemo,
+  },
+  {
+    slug: 'session-item',
+    name: 'SessionItem',
+    description: '设备会话条目：设备图标、认证状态、最近活动与操作在窄屏自动堆叠，桌面端恢复横向布局。',
+    imports: ['SessionItem', 'Badge', 'Button'],
+    wide: true,
+    Demo: SessionItemDemo,
   },
   {
     slug: 'drawer',
