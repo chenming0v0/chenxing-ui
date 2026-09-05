@@ -38,11 +38,8 @@ export function IntroGate({ onDone }: { onDone: () => void }) {
 
   return (
     <div ref={gateRef} className={`cx-intro${leaving ? ' is-leaving' : ''}`} role="dialog" aria-modal="true" aria-label="正在加载辰星通行证" tabIndex={-1}>
-      <span className="cx-intro-tag chenxing-mono">[ Chenxing Auth ]</span>
-      <div className="flex flex-col items-center">
-        <span className="cx-intro-count chenxing-mono">{String(count).padStart(3, '0')}%</span>
-        <p className="chenxing-mono mt-4 text-[10px] uppercase tracking-[0.3em] text-[var(--chenxing-muted-foreground)]">正在接入星门认证中枢</p>
-      </div>
+      <span className="cx-intro-tag chenxing-mono">[ chengming-Auth ]</span>
+      <span className="cx-intro-count chenxing-mono">{String(count).padStart(3, '0')}%</span>
       <span className="cx-intro-bar" style={{ transform: `scaleX(${count / 100})` }} />
     </div>
   )
