@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties } from 'react'
 import { ArrowDown, ArrowRight, Code2, MessageSquare, Search, X } from 'lucide-react'
 import { SkipTarget, useSkipTargetId } from '../src'
 import { allEntries, CATEGORIES, findEntry, getExamples, importNames, type DemoEntry } from './registry'
@@ -17,15 +17,55 @@ function useHash() {
   return hash
 }
 
+const CARD_ROW = 4
+const CARD_GAP = 16
+const MIN_PREVIEW = 184
+const PREVIEW_PADDING = 22
+
 function GalleryCard({ entry }: { entry: DemoEntry }) {
-  return <article className={`docs-gallery-card${entry.wide ? ' docs-gallery-card-wide' : ''}`}>
-    <div className="docs-gallery-card-preview" inert aria-hidden="true">
-      {entry.bare ? <Code2 size={28} className="docs-gallery-symbol" /> : <entry.Demo />}
-    </div>
-    <a className="docs-gallery-card-link" href={`#/c/${entry.slug}`} aria-label={`查看 ${entry.name}`}>
-      <div className="docs-gallery-card-copy"><strong>{entry.name}<ArrowRight size={15} aria-hidden="true" /></strong><p>{entry.description}</p></div>
-    </a>
-  </article>
+  const demoRef = useRef<HTMLDivElement>(null)
+  const copyRef = useRef<HTMLDivElement>(null)
+  const [rows, setRows] = useState(Math.ceil((MIN_PREVIEW + 100 + CARD_GAP) / (CARD_ROW + CARD_GAP)))
+
+  useLayoutEffect(() => {
+    const demo = demoRef.current
+    const copy = copyRef.current
+    if (!demo || !copy) return
+    let frame = 0
+    const update = () => {
+      cancelAnimationFrame(frame)
+      frame = requestAnimationFrame(() => {
+        const natural = Math.max(MIN_PREVIEW, demo.offsetHeight + PREVIEW_PADDING * 2) + copy.offsetHeight
+        const next = Math.max(1, Math.ceil((natural + CARD_GAP) / (CARD_ROW + CARD_GAP)))
+        setRows((current) => (next === current ? current : next))
+      })
+    }
+    update()
+    if (typeof ResizeObserver === 'undefined') return () => cancelAnimationFrame(frame)
+    const observer = new ResizeObserver(update)
+    observer.observe(demo)
+    observer.observe(copy)
+    return () => {
+      observer.disconnect()
+      cancelAnimationFrame(frame)
+    }
+  }, [entry.slug])
+
+  return (
+    <article
+      className={`docs-gallery-card${entry.wide ? ' docs-gallery-card-wide' : ''}`}
+      style={{ '--card-rows': rows } as CSSProperties}
+    >
+      <div className="docs-gallery-card-preview" inert aria-hidden="true">
+        <div className="docs-gallery-card-demo" ref={demoRef}>
+          {entry.bare ? <Code2 size={28} className="docs-gallery-symbol" /> : <entry.Demo />}
+        </div>
+      </div>
+      <a className="docs-gallery-card-link" href={`#/c/${entry.slug}`} aria-label={`查看 ${entry.name}`}>
+        <div className="docs-gallery-card-copy" ref={copyRef}><strong>{entry.name}<ArrowRight size={15} aria-hidden="true" /></strong><p>{entry.description}</p></div>
+      </a>
+    </article>
+  )
 }
 
 function HomePage() {

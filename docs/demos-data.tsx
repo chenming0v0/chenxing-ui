@@ -139,6 +139,13 @@ export const DATA_ENTRIES: DemoEntry[] = [
     ),
   },
   {
+    slug: 'session-item',
+    name: 'SessionItem',
+    description: '设备会话条目：设备图标、认证状态、最近活动与操作在窄屏自动堆叠，桌面端恢复横向布局。',
+    imports: ['SessionItem', 'Badge', 'Button'],
+    Demo: SessionItemDemo,
+  },
+  {
     slug: 'settings-action-row',
     name: 'SettingsActionRow',
     description: '设置列表项：图标、状态与说明保持稳定层级；操作在手机端纵向铺满，在桌面端回到行尾。',
@@ -169,26 +176,18 @@ export const DATA_ENTRIES: DemoEntry[] = [
     ),
   },
   {
+    slug: 'drawer',
+    name: 'Drawer',
+    description: '右侧模态抽屉：焦点陷阱、Escape/遮罩关闭、busy 时禁止关闭。',
+    Demo: DrawerDemo,
+  },
+  {
     slug: 'table',
     name: 'TablePanel + DataTable + TablePagination',
     description: '表格三件套：面板外框、列定义与空态、统一分页栏；行内操作用 RowActions + RowAction 文字链接。',
     imports: ['TablePanel', 'DataTable', 'TablePagination', 'RowActions', 'RowAction'],
     wide: true,
     Demo: TableDemo,
-  },
-  {
-    slug: 'session-item',
-    name: 'SessionItem',
-    description: '设备会话条目：设备图标、认证状态、最近活动与操作在窄屏自动堆叠，桌面端恢复横向布局。',
-    imports: ['SessionItem', 'Badge', 'Button'],
-    wide: true,
-    Demo: SessionItemDemo,
-  },
-  {
-    slug: 'drawer',
-    name: 'Drawer',
-    description: '右侧模态抽屉：焦点陷阱、Escape/遮罩关闭、busy 时禁止关闭。',
-    Demo: DrawerDemo,
   },
   {
     slug: 'avatar-editor',

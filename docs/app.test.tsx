@@ -1,4 +1,6 @@
 import { cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
+import { readFileSync } from 'node:fs'
+import { resolve } from 'node:path'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import App from './app'
 import { readRoute, sectionHref } from './navigation'
@@ -74,5 +76,23 @@ describe('documentation navigation', () => {
     render(<App />)
     const tableLink = screen.getByRole('link', { name: '查看 TablePanel + DataTable + TablePagination' })
     expect(tableLink.parentElement?.className).toContain('docs-gallery-card-wide')
+  })
+
+  it('spans gallery cards across grid rows by their content height', () => {
+    window.history.replaceState(null, '', '/#/')
+    render(<App />)
+    const card = screen.getByRole('link', { name: '查看 SessionItem' }).closest('article')!
+    expect(Number(card.style.getPropertyValue('--card-rows'))).toBeGreaterThanOrEqual(1)
+    const css = readFileSync(resolve(process.cwd(), 'docs/docs.css'), 'utf8')
+    const gridRule = css.match(/\.docs-gallery-grid \{[^}]+\}/)![0]
+    expect(gridRule).toContain('grid-auto-rows: 4px')
+    expect(gridRule).toContain('grid-auto-flow: row dense')
+    expect(card.className).toMatch(/docs-gallery-card( |$)/)
+    const cardRule = css.match(/\.docs-gallery-card \{[^}]+\}/)![0]
+    expect(cardRule).toContain('grid-row: span var(--card-rows')
+    const previewRule = css.match(/\.docs-gallery-card-preview \{[^}]+\}/)![0]
+    expect(previewRule).toContain('flex: 1 1 auto')
+    expect(previewRule).toContain('min-height: 184px')
+    expect(previewRule).not.toMatch(/[^-]height: \d+px/)
   })
 })

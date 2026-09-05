@@ -142,12 +142,13 @@ html, body { background: var(--docs-bg); color: var(--docs-text); }
 .docs-gallery-section { margin-top: 32px; }
 .docs-gallery-section h2 { display: flex; align-items: center; gap: 10px; margin: 0 0 16px; font-size: 17px; font-weight: 600; }
 .docs-gallery-section h2 span { color: var(--docs-subtle); font-size: 12px; font-weight: 400; }
-.docs-gallery-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
-.docs-gallery-card { position: relative; min-width: 0; overflow: hidden; border: 1px solid var(--docs-line); border-radius: 8px; background: var(--docs-surface); }
+.docs-gallery-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-auto-rows: 4px; grid-auto-flow: row dense; gap: 16px; }
+.docs-gallery-card { position: relative; display: flex; flex-direction: column; grid-row: span var(--card-rows, 16); min-width: 0; overflow: hidden; border: 1px solid var(--docs-line); border-radius: 8px; background: var(--docs-surface); }
 .docs-gallery-card-wide { grid-column: span 2; }
 .docs-gallery-card:hover, .docs-gallery-card:focus-within { border-color: var(--docs-line-strong); }
-.docs-gallery-card-preview { height: 184px; display: flex; flex-wrap: wrap; gap: 10px; align-content: center; align-items: center; justify-content: center; padding: 22px; overflow: hidden; background: #0c0e13; color: var(--chenxing-foreground); }
-.docs-gallery-card-preview > * { min-width: 0; max-width: 100%; }
+.docs-gallery-card-preview { flex: 1 1 auto; min-height: 184px; display: flex; align-items: center; justify-content: center; padding: 22px; overflow: hidden; background: #0c0e13; color: var(--chenxing-foreground); }
+.docs-gallery-card-demo { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: center; width: 100%; min-width: 0; }
+.docs-gallery-card-demo > * { min-width: 0; max-width: 100%; }
 .docs-gallery-symbol { color: var(--docs-subtle); }
 .docs-gallery-card-link::after { position: absolute; inset: 0; content: ""; }
 .docs-gallery-card-link:focus-visible { outline: none; }
