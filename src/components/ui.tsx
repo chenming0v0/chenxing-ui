@@ -6,7 +6,7 @@ import {
   FlaskConical, Gauge, Globe, Globe2, Info, KeyRound, LayoutDashboard, LayoutGrid, Layers, Link2, Lock, LockKeyhole,
   LogIn, LogOut, Mail, Menu, MoreHorizontal, Pencil, Plus, Power, Receipt, RefreshCw, Rocket, RotateCcw, Save, Search,
   Send, Server, Settings, Settings2, Shield, ShieldAlert, ShieldCheck, Sparkles, Star, Store, Terminal, Ticket, Trash2, Unlink,
-  User, UserPlus, Users, Wallet, X, Zap, Clock3, type LucideIcon,
+  User, UserPlus, Users, Wallet, X, Zap, Clock3, Monitor, Smartphone, type LucideIcon,
 } from 'lucide-react'
 import logoUrl from '../assets/logo.png'
 
@@ -24,7 +24,7 @@ const icons: Record<string, LucideIcon> = {
   rocket: Rocket, 'rotate-ccw': RotateCcw, save: Save, search: Search, send: Send, server: Server, settings: Settings,
   'settings-2': Settings2, shield: Shield, 'shield-alert': ShieldAlert, 'shield-check': ShieldCheck, sparkles: Sparkles,
   star: Star, store: Store, terminal: Terminal, ticket: Ticket, 'trash-2': Trash2, unlink: Unlink, user: User, 'user-plus': UserPlus,
-  users: Users, wallet: Wallet, x: X, zap: Zap, 'clock-3': Clock3,
+  users: Users, wallet: Wallet, x: X, zap: Zap, 'clock-3': Clock3, monitor: Monitor, smartphone: Smartphone,
 }
 
 export function Icon({ name, size = 16, className = '', strokeWidth = 1.8 }: { name: string; size?: number; className?: string; strokeWidth?: number }) {

@@ -163,6 +163,91 @@
 .chenxing-btn-danger:active { transform: scale(0.985); }
 .chenxing-btn-danger:disabled { opacity: 0.45; cursor: not-allowed; }
 
+/* ---------- account session items ---------- */
+/*
+ * A session row has its own responsive geometry because fixed actions must not
+ * squeeze the metadata column. The mobile layout intentionally gives the
+ * device identity and action separate full-width rows, matching the account
+ * settings workflow on touch screens.
+ */
+.chenxing-session-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  min-height: 7rem;
+  padding: 1rem;
+  border: 1px solid var(--chenxing-border);
+  border-radius: var(--chenxing-radius-md);
+  background: rgba(4, 8, 16, 0.38);
+  transition: border-color 0.2s, background 0.2s;
+}
+.chenxing-session-item:hover {
+  border-color: var(--chenxing-border-strong);
+  background: rgba(255, 255, 255, 0.035);
+}
+.chenxing-session-item-main {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+.chenxing-session-item-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  flex: 0 0 2.75rem;
+  color: var(--chenxing-cyan);
+  background: var(--chenxing-cyan-soft);
+  border-radius: var(--chenxing-radius-full);
+}
+.chenxing-session-item-content { min-width: 0; }
+.chenxing-session-item-heading {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.chenxing-session-item-description {
+  margin-top: 0.3rem;
+  min-width: 0;
+  color: var(--chenxing-muted-foreground);
+  font-family: var(--chenxing-font-body);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+.chenxing-session-item-actions {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+.chenxing-session-item-actions > * { width: auto; }
+@media (max-width: 639px) {
+  .chenxing-session-item {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 0.9rem;
+    min-height: 0;
+  }
+  .chenxing-session-item-main {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 0.7rem;
+  }
+  .chenxing-session-item-icon { align-self: flex-start; }
+  .chenxing-session-item-actions {
+    width: 100%;
+    align-items: stretch;
+    justify-content: stretch;
+  }
+  .chenxing-session-item-actions > * { width: 100%; }
+}
+
 .chenxing-icon-btn {
   display: inline-flex;
   align-items: center;

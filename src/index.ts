@@ -45,6 +45,8 @@ export { DataTable, RowAction, RowActions, TablePagination, TablePanel, type Dat
 
 // 设置列表项（移动端全宽操作 / 桌面端行尾操作）
 export { SettingsActionRow, type SettingsActionRowProps } from './components/settings-action-row'
+// 登录会话条目（移动端垂直堆叠 / 桌面端横向设备信息）
+export { SessionItem, type SessionItemProps } from './components/session-item'
 
 // 动效原语
 export {
