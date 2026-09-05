@@ -233,18 +233,92 @@
   box-shadow: 0 0 0 3px var(--chenxing-primary-soft), 0 0 18px rgba(56, 189, 248, 0.18);
 }
 .chenxing-field-shell.chenxing-field-error { border-color: var(--chenxing-error); box-shadow: 0 0 0 3px var(--chenxing-error-soft); }
-/* tag input：chips 与输入框同住一个 field shell，自动换行。
-   输入框保底 10rem 宽，挤不下时整行换行；添加按钮固定收在行尾。 */
+/* tag input：已提交值是可编辑条目，不使用不可编辑语义的胶囊 chip。 */
 .chenxing-tag-input {
   flex-wrap: wrap;
-  gap: 0.4rem 0.5rem;
-  padding: 0.45rem 0.45rem 0.45rem 0.9rem;
-  min-height: 3.25rem;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 0.55rem 0.55rem 0.8rem;
+  min-height: 3.5rem;
 }
-.chenxing-tag-input input {
-  flex: 1 1 10rem;
+.chenxing-tag-item {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.5rem;
+  max-width: 100%;
+  overflow: hidden;
+  color: var(--chenxing-foreground);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--chenxing-border);
+  border-radius: var(--chenxing-radius-md);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  animation: chenxing-tag-enter 420ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  transition: transform 180ms cubic-bezier(0.22, 1, 0.36, 1), border-color 180ms ease, background 180ms ease;
+}
+.chenxing-tag-item:hover {
+  transform: translateY(-1px);
+  border-color: rgba(103, 232, 249, 0.36);
+  background: rgba(255, 255, 255, 0.09);
+}
+.chenxing-tag-item:nth-child(2) { animation-delay: 45ms; }
+.chenxing-tag-item:nth-child(3) { animation-delay: 90ms; }
+.chenxing-tag-item:nth-child(4) { animation-delay: 135ms; }
+.chenxing-tag-value {
+  min-width: 0;
+  padding: 0 0.75rem;
+  overflow: hidden;
+  font-family: var(--chenxing-font-mono);
+  font-size: 0.875rem;
+  line-height: 1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.chenxing-tag-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  flex-shrink: 0;
+  color: var(--chenxing-muted-foreground);
+  border-left: 1px solid var(--chenxing-border);
+  transition: color 0.15s, background 0.15s;
+}
+.chenxing-tag-action:hover,
+.chenxing-tag-action:focus-visible {
+  color: var(--chenxing-foreground);
+  background: rgba(255, 255, 255, 0.09);
+}
+.chenxing-tag-action:focus-visible {
+  outline: 2px solid var(--chenxing-primary);
+  outline-offset: -2px;
+}
+.chenxing-tag-action:disabled { opacity: 0.45; cursor: not-allowed; }
+.chenxing-tag-action svg {
+  animation: chenxing-tag-action-in 260ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+.chenxing-tag-editor {
+  display: block;
+  flex: 1 1 13rem;
+  min-width: 8rem;
+  animation: chenxing-tag-editor-in 360ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.chenxing-tag-input-draft,
+.chenxing-tag-input-edit {
+  flex: 1 1 11rem;
   width: auto;
-  padding: 0.4rem 0;
+  min-width: 8rem;
+  padding: 0.6rem 0;
+}
+.chenxing-tag-input-edit {
+  flex-basis: 13rem;
+  min-height: 2.5rem;
+  padding: 0.6rem 0.75rem;
+  color: var(--chenxing-foreground);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--chenxing-primary);
+  border-radius: var(--chenxing-radius-md);
+  box-shadow: 0 0 0 3px var(--chenxing-primary-soft);
 }
 .chenxing-tag-input-add {
   width: 34px;
@@ -253,6 +327,25 @@
   margin-left: auto;
 }
 .chenxing-tag-input-add:disabled { opacity: 0.45; cursor: not-allowed; }
+@keyframes chenxing-tag-enter {
+  from { opacity: 0; transform: translateY(5px) scale(0.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes chenxing-tag-editor-in {
+  from { opacity: 0; transform: translateX(-10px) scaleX(0.84); transform-origin: left center; }
+  to { opacity: 1; transform: translateX(0) scaleX(1); transform-origin: left center; }
+}
+@keyframes chenxing-tag-action-in {
+  from { opacity: 0; transform: translateX(-3px) scale(0.7); }
+  to { opacity: 1; transform: translateX(0) scale(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .chenxing-tag-item,
+  .chenxing-tag-action svg,
+  .chenxing-tag-editor { animation: none; }
+  .chenxing-tag-item,
+  .chenxing-tag-action { transition: none; }
+}
 
 .chenxing-field-icon {
   flex-shrink: 0;

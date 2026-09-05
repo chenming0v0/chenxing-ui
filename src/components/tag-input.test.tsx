@@ -8,6 +8,7 @@ function renderField(overrides: Partial<Parameters<typeof TagInputField>[0]> = {
   const onDraftChange = vi.fn()
   const onAdd = vi.fn()
   const onRemove = vi.fn()
+  const onUpdate = vi.fn(() => true)
   render(
     <TagInputField
       label="允许的域名"
@@ -16,10 +17,11 @@ function renderField(overrides: Partial<Parameters<typeof TagInputField>[0]> = {
       onDraftChange={onDraftChange}
       onAdd={onAdd}
       onRemove={onRemove}
+      onUpdate={onUpdate}
       {...overrides}
     />,
   )
-  return { onDraftChange, onAdd, onRemove }
+  return { onDraftChange, onAdd, onRemove, onUpdate }
 }
 
 describe('TagInputField', () => {
@@ -59,6 +61,29 @@ describe('TagInputField', () => {
     const withDraft = renderField({ draft: 'c' })
     fireEvent.keyDown(screen.getByLabelText('允许的域名'), { key: 'Backspace' })
     expect(withDraft.onRemove).not.toHaveBeenCalled()
+  })
+
+  it('条目默认显示编辑/删除动作，编辑时自动选中文本，Enter 提交新值', () => {
+    const { onUpdate } = renderField()
+    fireEvent.click(screen.getByRole('button', { name: '编辑 a.com' }))
+    const editor = screen.getByRole('textbox', { name: '编辑 a.com' }) as HTMLInputElement
+    expect(editor.value).toBe('a.com')
+    fireEvent.change(editor, { target: { value: 'new.example.com' } })
+    fireEvent.keyDown(editor, { key: 'Enter' })
+    expect(onUpdate).toHaveBeenCalledWith('a.com', 0, 'new.example.com')
+    expect(screen.queryByRole('textbox', { name: '编辑 a.com' })).toBeNull()
+  })
+
+  it('Escape 取消编辑，回调返回 false 时保留编辑态', () => {
+    const onUpdate = vi.fn(() => false)
+    renderField({ onUpdate })
+    fireEvent.click(screen.getByRole('button', { name: '编辑 a.com' }))
+    const editor = screen.getByRole('textbox', { name: '编辑 a.com' })
+    fireEvent.change(editor, { target: { value: 'invalid' } })
+    fireEvent.keyDown(editor, { key: 'Enter' })
+    expect(screen.getByRole('textbox', { name: '编辑 a.com' })).toBeTruthy()
+    fireEvent.keyDown(editor, { key: 'Escape' })
+    expect(screen.queryByRole('textbox', { name: '编辑 a.com' })).toBeNull()
   })
 
   it('每枚 chip 的移除按钮带上具体值，避免同名按钮不可区分', () => {
