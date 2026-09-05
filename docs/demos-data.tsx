@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import {
-  AvatarEditor, Button, DataTable, Drawer, Field, HudPanel, Notice, RowAction, RowActions, TablePagination, TablePanel,
+  AvatarEditor, Badge, Button, DataTable, Drawer, Field, HudPanel, Notice, RowAction, RowActions, SettingsActionRow,
+  TablePagination, TablePanel,
   type SourceSize, logoUrl,
 } from '../src'
 import type { DemoEntry } from './registry'
@@ -114,6 +115,36 @@ export const DATA_ENTRIES: DemoEntry[] = [
         <h3 className="chenxing-h3">嵌套面板</h3>
         <p className="chenxing-caption mt-1.5">支持 as 多态标签（section / article / aside / form），带 cyan 角标高光。</p>
       </HudPanel>
+    ),
+  },
+  {
+    slug: 'settings-action-row',
+    name: 'SettingsActionRow',
+    description: '设置列表项：图标、状态与说明保持稳定层级；操作在手机端纵向铺满，在桌面端回到行尾。',
+    wide: true,
+    Demo: () => (
+      <div className="w-full space-y-3">
+        <SettingsActionRow
+          icon="lock-keyhole"
+          title="密码管理"
+          description="定期更新密码；修改成功后所有现有会话都会被撤销。"
+          status={<Badge tone="success">已设置</Badge>}
+          actions={<Button variant="ghost" icon="key-round">修改密码</Button>}
+        />
+        <SettingsActionRow
+          icon="key-round"
+          accent="gold"
+          title="Passkey 登录"
+          description="使用设备生物识别或安全密钥完成无密码验证。"
+          status={<Badge>2 个凭据</Badge>}
+          actions={(
+            <>
+              <Button icon="key-round">添加 Passkey</Button>
+              <Button variant="danger" icon="trash-2">移除全部</Button>
+            </>
+          )}
+        />
+      </div>
     ),
   },
   {

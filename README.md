@@ -10,6 +10,7 @@
 | 下拉选择 `components/select` | `Select`、`SelectField`（ARIA 1.2 select-only combobox） |
 | 抽屉/模态 `components/drawer` `modal` | `Drawer`、`useDrawerFocus`、`useModalFocus`、`activateDrawerModal` |
 | 数据表 `components/data-table` | `DataTable`、`TablePanel`、`TablePagination` |
+| 设置列表 `components/settings-action-row` | `SettingsActionRow`（移动端全宽操作、桌面端行尾操作） |
 | 动效 `components/motion` | `Reveal`、`CountUp`、`Typewriter`、`ScrambleText`、`DrawLine`、`useInView`、`usePrefersReducedMotion` |
 | 空间背景 `components/space` | `SpaceBackdrop`、`WarpField` |
 | 可访问性 `components/skip-link` | `SkipLink`、`SkipTarget` |

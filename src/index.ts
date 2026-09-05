@@ -39,6 +39,9 @@ export { useModalFocus } from './components/modal'
 // 数据表
 export { DataTable, RowAction, RowActions, TablePagination, TablePanel, type DataTableColumn } from './components/data-table'
 
+// 设置列表项（移动端全宽操作 / 桌面端行尾操作）
+export { SettingsActionRow, type SettingsActionRowProps } from './components/settings-action-row'
+
 // 动效原语
 export {
   CountUp,
