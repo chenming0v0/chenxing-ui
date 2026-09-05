@@ -25,6 +25,9 @@ export {
   type ChipColor,
 } from './components/ui'
 
+// 标签输入（chips 与输入框合体的 field shell）
+export { TagInputField, type TagInputFieldProps } from './components/tag-input'
+
 // 下拉选择（ARIA 1.2 combobox）
 export { Select, SelectField, type SelectOption } from './components/select'
 

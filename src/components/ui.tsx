@@ -121,11 +121,13 @@ export function Badge({ children, tone = 'neutral' }: { children: ReactNode; ton
 
 export type ChipColor = 'default' | 'accent' | 'success' | 'warning' | 'danger'
 
-export function Chip({ children, color = 'default', onRemove }: {
+export function Chip({ children, color = 'default', onRemove, removeLabel = '移除' }: {
   children: ReactNode
   /** 语义色：default 中性灰 / accent 青 / success 绿 / warning 琥珀 / danger 红 */
   color?: ChipColor
   onRemove?: () => void
+  /** 移除按钮的无障碍名；多枚可移除 chip 并存时应带上值，例如「移除 example.com」。 */
+  removeLabel?: string
 }) {
   return (
     <span className={`chenxing-chip chenxing-chip-${color}${onRemove ? ' is-removable' : ''}`}>
@@ -138,7 +140,7 @@ export function Chip({ children, color = 'default', onRemove }: {
           type="button"
           className="chenxing-chip-remove flex h-6 w-6 shrink-0 cursor-pointer items-center justify-center rounded-full"
           onClick={onRemove}
-          aria-label="移除"
+          aria-label={removeLabel}
         >
           <Icon name="x" size={12} />
         </button>

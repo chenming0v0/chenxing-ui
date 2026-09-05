@@ -8,6 +8,7 @@
 | --- | --- |
 | 核心原语 `components/ui` | `HudPanel`（唯一玻璃卡片容器）、`Button`、`Badge`、`Chip`、`Field` / `PasswordField` / `TextAreaField` / `FieldShell`、`Switch` / `ToggleRow`、`Notice`、`EmptyState`、`PageIntro`、`CopyValue`、`Icon`、`Avatar` / `AvatarContent`、`BrandMark` / `BrandLockup` |
 | 下拉选择 `components/select` | `Select`、`SelectField`（ARIA 1.2 select-only combobox） |
+| 标签输入 `components/tag-input` | `TagInputField`（chips 与输入框合体的 field shell，Enter/按钮提交、空草稿 Backspace 移除末项） |
 | 抽屉/模态 `components/drawer` `modal` | `Drawer`、`useDrawerFocus`、`useModalFocus`、`activateDrawerModal` |
 | 数据表 `components/data-table` | `DataTable`、`TablePanel`、`TablePagination` |
 | 设置列表 `components/settings-action-row` | `SettingsActionRow`（移动端全宽操作、桌面端行尾操作） |

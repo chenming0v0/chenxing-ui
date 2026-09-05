@@ -1,0 +1,91 @@
+import { describe, expect, it, afterEach, vi } from 'vitest'
+import { render, screen, cleanup, fireEvent } from '@testing-library/react'
+import { TagInputField } from './tag-input'
+
+afterEach(cleanup)
+
+function renderField(overrides: Partial<Parameters<typeof TagInputField>[0]> = {}) {
+  const onDraftChange = vi.fn()
+  const onAdd = vi.fn()
+  const onRemove = vi.fn()
+  render(
+    <TagInputField
+      label="允许的域名"
+      values={['a.com', 'b.com']}
+      draft=""
+      onDraftChange={onDraftChange}
+      onAdd={onAdd}
+      onRemove={onRemove}
+      {...overrides}
+    />,
+  )
+  return { onDraftChange, onAdd, onRemove }
+}
+
+describe('TagInputField', () => {
+  it('label 与输入框关联，chips 与输入框同在一个 field shell 里', () => {
+    renderField()
+    const input = screen.getByLabelText('允许的域名')
+    expect(input.closest('.chenxing-field-shell')).toBeTruthy()
+    expect(screen.getByText('a.com').closest('.chenxing-field-shell'))
+      .toBe(input.closest('.chenxing-field-shell'))
+  })
+
+  it('Enter 提交草稿并阻止表单默认提交', () => {
+    const submit = vi.fn((event) => event.preventDefault())
+    const onAdd = vi.fn()
+    render(
+      <form onSubmit={submit}>
+        <TagInputField label="允许的域名" values={[]} draft="c.com" onDraftChange={() => {}} onAdd={onAdd} onRemove={() => {}} />
+      </form>,
+    )
+    fireEvent.keyDown(screen.getByLabelText('允许的域名'), { key: 'Enter' })
+    expect(onAdd).toHaveBeenCalledTimes(1)
+    expect(submit).not.toHaveBeenCalled()
+  })
+
+  it('添加按钮使用可配置的无障碍名并触发 onAdd', () => {
+    const { onAdd } = renderField()
+    fireEvent.click(screen.getByRole('button', { name: '添加' }))
+    expect(onAdd).toHaveBeenCalledTimes(1)
+  })
+
+  it('草稿为空时 Backspace 移除末位标签，草稿非空时不动列表', () => {
+    const { onRemove } = renderField()
+    fireEvent.keyDown(screen.getByLabelText('允许的域名'), { key: 'Backspace' })
+    expect(onRemove).toHaveBeenCalledWith('b.com', 1)
+
+    cleanup()
+    const withDraft = renderField({ draft: 'c' })
+    fireEvent.keyDown(screen.getByLabelText('允许的域名'), { key: 'Backspace' })
+    expect(withDraft.onRemove).not.toHaveBeenCalled()
+  })
+
+  it('每枚 chip 的移除按钮带上具体值，避免同名按钮不可区分', () => {
+    const { onRemove } = renderField()
+    fireEvent.click(screen.getByRole('button', { name: '移除 a.com' }))
+    expect(onRemove).toHaveBeenCalledWith('a.com', 0)
+  })
+
+  it('errorText 接管 aria-invalid 与 aria-describedby，无错误时显示 hint', () => {
+    renderField({ errorText: '域名格式不对。', hint: '不显示' })
+    const input = screen.getByLabelText('允许的域名')
+    expect(input.getAttribute('aria-invalid')).toBe('true')
+    const message = document.getElementById(input.getAttribute('aria-describedby')!)
+    expect(message?.textContent).toContain('域名格式不对。')
+
+    cleanup()
+    renderField({ hint: '仅接受完整域名。' })
+    const hinted = screen.getByLabelText('允许的域名')
+    expect(hinted.getAttribute('aria-invalid')).toBeNull()
+    expect(document.getElementById(hinted.getAttribute('aria-describedby')!)?.textContent)
+      .toBe('仅接受完整域名。')
+  })
+
+  it('disabled 时输入框与添加按钮禁用，且不渲染移除按钮', () => {
+    renderField({ disabled: true })
+    expect((screen.getByLabelText('允许的域名') as HTMLInputElement).disabled).toBe(true)
+    expect((screen.getByRole('button', { name: '添加' }) as HTMLButtonElement).disabled).toBe(true)
+    expect(screen.queryByRole('button', { name: /移除/ })).toBeNull()
+  })
+})

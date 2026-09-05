@@ -233,6 +233,27 @@
   box-shadow: 0 0 0 3px var(--chenxing-primary-soft), 0 0 18px rgba(56, 189, 248, 0.18);
 }
 .chenxing-field-shell.chenxing-field-error { border-color: var(--chenxing-error); box-shadow: 0 0 0 3px var(--chenxing-error-soft); }
+/* tag input：chips 与输入框同住一个 field shell，自动换行。
+   输入框保底 10rem 宽，挤不下时整行换行；添加按钮固定收在行尾。 */
+.chenxing-tag-input {
+  flex-wrap: wrap;
+  gap: 0.4rem 0.5rem;
+  padding: 0.45rem 0.45rem 0.45rem 0.9rem;
+  min-height: 3.25rem;
+}
+.chenxing-tag-input input {
+  flex: 1 1 10rem;
+  width: auto;
+  padding: 0.4rem 0;
+}
+.chenxing-tag-input-add {
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+.chenxing-tag-input-add:disabled { opacity: 0.45; cursor: not-allowed; }
+
 .chenxing-field-icon {
   flex-shrink: 0;
   color: var(--chenxing-muted-foreground);
