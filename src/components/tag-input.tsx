@@ -99,6 +99,8 @@ export function TagInputField({
             <input
               ref={editInputRef}
               className="chenxing-tag-input-edit"
+              /* 宽度跟随内容（mono 字体下 ch 精确），编辑框与原条目几何一致，避免布局跳动。 */
+              style={{ width: `calc(${Math.max(editValue.length, 3)}ch + 1.4rem)` }}
               value={editValue}
               disabled={disabled}
               maxLength={maxLength}
@@ -118,7 +120,7 @@ export function TagInputField({
                 aria-label={`编辑 ${value}`}
                 onClick={() => { setEditValue(value); setEditingIndex(index) }}
               >
-                <Icon name="pencil" size={17} />
+                <Icon name="pencil" size={13} />
               </button>
             ) : null}
             {!disabled ? (
@@ -128,7 +130,7 @@ export function TagInputField({
                 aria-label={`移除 ${value}`}
                 onClick={() => onRemove(value, index)}
               >
-                <Icon name="trash-2" size={17} />
+                <Icon name="trash-2" size={13} />
               </button>
             ) : null}
           </span>
@@ -155,7 +157,7 @@ export function TagInputField({
           disabled={disabled}
           onClick={onAdd}
         >
-          <Icon name="plus" size={16} />
+          <Icon name="plus" size={14} />
         </button>
       </div>
       {errorText ? (

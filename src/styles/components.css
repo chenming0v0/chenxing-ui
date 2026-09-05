@@ -233,42 +233,42 @@
   box-shadow: 0 0 0 3px var(--chenxing-primary-soft), 0 0 18px rgba(56, 189, 248, 0.18);
 }
 .chenxing-field-shell.chenxing-field-error { border-color: var(--chenxing-error); box-shadow: 0 0 0 3px var(--chenxing-error-soft); }
-/* tag input：已提交值是可编辑条目，不使用不可编辑语义的胶囊 chip。 */
+/* tag input：已提交值是可编辑条目（带编辑/删除动作），但视觉上保持紧凑安静，
+   不做成三个并排大按钮的"分段工具栏"。动作按钮无分隔线、无边框，靠 hover 提示。 */
 .chenxing-tag-input {
   flex-wrap: wrap;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.55rem 0.55rem 0.55rem 0.8rem;
-  min-height: 3.5rem;
+  gap: 0.45rem;
+  padding: 0.5rem 0.55rem 0.5rem 0.75rem;
+  min-height: 3rem;
 }
 .chenxing-tag-item {
   display: inline-flex;
   align-items: center;
-  min-height: 2.5rem;
+  height: 2rem;
   max-width: 100%;
   overflow: hidden;
+  padding-right: 0.2rem;
   color: var(--chenxing-foreground);
-  background: rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.05);
   border: 1px solid var(--chenxing-border);
-  border-radius: var(--chenxing-radius-md);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  border-radius: var(--chenxing-radius-sm);
   animation: chenxing-tag-enter 420ms cubic-bezier(0.16, 1, 0.3, 1) both;
-  transition: transform 180ms cubic-bezier(0.22, 1, 0.36, 1), border-color 180ms ease, background 180ms ease;
+  transition: border-color 180ms ease, background 180ms ease;
 }
 .chenxing-tag-item:hover {
-  transform: translateY(-1px);
-  border-color: rgba(103, 232, 249, 0.36);
-  background: rgba(255, 255, 255, 0.09);
+  border-color: var(--chenxing-border-strong);
+  background: rgba(255, 255, 255, 0.08);
 }
 .chenxing-tag-item:nth-child(2) { animation-delay: 45ms; }
 .chenxing-tag-item:nth-child(3) { animation-delay: 90ms; }
 .chenxing-tag-item:nth-child(4) { animation-delay: 135ms; }
 .chenxing-tag-value {
   min-width: 0;
-  padding: 0 0.75rem;
+  padding: 0 0.4rem 0 0.6rem;
   overflow: hidden;
   font-family: var(--chenxing-font-mono);
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   line-height: 1;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -277,71 +277,69 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 1.6rem;
+  height: 1.6rem;
   flex-shrink: 0;
   color: var(--chenxing-muted-foreground);
-  border-left: 1px solid var(--chenxing-border);
+  border-radius: 6px;
   transition: color 0.15s, background 0.15s;
 }
 .chenxing-tag-action:hover,
 .chenxing-tag-action:focus-visible {
   color: var(--chenxing-foreground);
-  background: rgba(255, 255, 255, 0.09);
+  background: rgba(255, 255, 255, 0.1);
 }
 .chenxing-tag-action:focus-visible {
   outline: 2px solid var(--chenxing-primary);
   outline-offset: -2px;
 }
 .chenxing-tag-action:disabled { opacity: 0.45; cursor: not-allowed; }
-.chenxing-tag-action svg {
-  animation: chenxing-tag-action-in 260ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
-}
 .chenxing-tag-editor {
-  display: block;
-  flex: 1 1 13rem;
-  min-width: 8rem;
-  animation: chenxing-tag-editor-in 360ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  display: inline-flex;
+  max-width: 100%;
+  animation: chenxing-tag-editor-in 200ms ease-out both;
 }
-.chenxing-tag-input-draft,
-.chenxing-tag-input-edit {
-  flex: 1 1 11rem;
+/* 用 shell 前缀提高特异性，压过 .chenxing-field-shell input 的 flex:1 / width:100%，
+   否则草稿框和编辑框的尺寸声明是死代码。 */
+.chenxing-field-shell input.chenxing-tag-input-draft {
+  flex: 1 1 9rem;
   width: auto;
-  min-width: 8rem;
-  padding: 0.6rem 0;
+  min-width: 7rem;
+  padding: 0.5rem 0;
+  font-size: 0.875rem;
 }
-.chenxing-tag-input-edit {
-  flex-basis: 13rem;
-  min-height: 2.5rem;
-  padding: 0.6rem 0.75rem;
+/* 编辑态与被替换的条目几何一致：同高、同字体、宽度由 TSX 按内容字符数内联给出，
+   原地变成可输入，不引起周围元素回流跳动；shell 已负责 focus 发光，这里不再叠光晕。 */
+.chenxing-field-shell input.chenxing-tag-input-edit {
+  flex: none;
+  width: auto;
+  max-width: 100%;
+  height: 2rem;
+  padding: 0 0.55rem;
+  font-family: var(--chenxing-font-mono);
+  font-size: 0.8125rem;
   color: var(--chenxing-foreground);
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid var(--chenxing-primary);
-  border-radius: var(--chenxing-radius-md);
-  box-shadow: 0 0 0 3px var(--chenxing-primary-soft);
+  background: rgba(56, 189, 248, 0.08);
+  border: 1px solid rgba(56, 189, 248, 0.45);
+  border-radius: var(--chenxing-radius-sm);
 }
 .chenxing-tag-input-add {
-  width: 34px;
-  height: 34px;
+  width: 30px;
+  height: 30px;
   flex-shrink: 0;
   margin-left: auto;
 }
 .chenxing-tag-input-add:disabled { opacity: 0.45; cursor: not-allowed; }
 @keyframes chenxing-tag-enter {
-  from { opacity: 0; transform: translateY(5px) scale(0.96); }
+  from { opacity: 0; transform: translateY(4px) scale(0.97); }
   to { opacity: 1; transform: translateY(0) scale(1); }
 }
 @keyframes chenxing-tag-editor-in {
-  from { opacity: 0; transform: translateX(-10px) scaleX(0.84); transform-origin: left center; }
-  to { opacity: 1; transform: translateX(0) scaleX(1); transform-origin: left center; }
-}
-@keyframes chenxing-tag-action-in {
-  from { opacity: 0; transform: translateX(-3px) scale(0.7); }
-  to { opacity: 1; transform: translateX(0) scale(1); }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 @media (prefers-reduced-motion: reduce) {
   .chenxing-tag-item,
-  .chenxing-tag-action svg,
   .chenxing-tag-editor { animation: none; }
   .chenxing-tag-item,
   .chenxing-tag-action { transition: none; }
