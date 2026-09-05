@@ -1,5 +1,5 @@
-import { afterEach, describe, expect, it } from 'vitest'
-import { cleanup, render, screen } from '@testing-library/react'
+import { afterEach, describe, expect, it, vi } from 'vitest'
+import { cleanup, fireEvent, render, screen } from '@testing-library/react'
 import { Badge, Button } from './ui'
 import { SessionItem } from './session-item'
 
@@ -23,9 +23,13 @@ describe('SessionItem', () => {
     expect(screen.getByRole('button', { name: '登出' }).parentElement?.dataset.slot).toBe('session-item-actions')
   })
 
-  it('uses stacked mobile and inline desktop layout hooks', () => {
-    render(<SessionItem title="其他会话" description="创建于 2026-09-05" />)
-    const item = screen.getByRole('article', { name: '其他会话' })
-    expect(item.className).toContain('chenxing-session-item')
+  it('keeps supplied actions interactive and respects their disabled state', () => {
+    const onRevoke = vi.fn()
+    const { rerender } = render(<SessionItem title="其他会话" description="创建于 2026-09-05" actions={<Button onClick={onRevoke}>登出</Button>} />)
+    fireEvent.click(screen.getByRole('button', { name: '登出' }))
+    expect(onRevoke).toHaveBeenCalledTimes(1)
+    rerender(<SessionItem title="其他会话" description="创建于 2026-09-05" actions={<Button disabled onClick={onRevoke}>登出</Button>} />)
+    fireEvent.click(screen.getByRole('button', { name: '登出' }))
+    expect(onRevoke).toHaveBeenCalledTimes(1)
   })
 })
