@@ -47,8 +47,8 @@ export const BRAND_ENTRIES: DemoEntry[] = [
       </>
     ),
     examples: [
-      { id: 'usage', title: 'Usage', code: `import { BrandLockup } from '@chenxing/ui'\n\nexport function Example() {\n  return <BrandLockup subtitle="设计系统" />\n}`, Demo: () => <BrandLockup subtitle="设计系统" /> },
-      { id: 'compact', title: 'Compact', code: `import { BrandLockup } from '@chenxing/ui'\n\nexport function CompactBrand() {\n  return <BrandLockup compact />\n}`, Demo: () => <BrandLockup compact /> },
+      { id: 'usage', title: 'Usage', Demo: () => <BrandLockup subtitle="设计系统" /> },
+      { id: 'compact', title: 'Compact', Demo: () => <BrandLockup compact /> },
     ],
   },
 ]
@@ -67,9 +67,9 @@ export const PRIMITIVE_ENTRIES: DemoEntry[] = [
       </>
     ),
     examples: [
-      { id: 'usage', title: 'Usage', code: `import { Button } from '@chenxing/ui'\n\nexport function Example() {\n  return <Button icon="rocket">主要操作</Button>\n}`, Demo: () => <Button icon="rocket">主要操作</Button> },
-      { id: 'variants', title: 'Variants', code: `import { Button } from '@chenxing/ui'\n\nexport function Variants() {\n  return (\n    <>\n      <Button variant="ghost">次要操作</Button>\n      <Button variant="danger">危险操作</Button>\n    </>\n  )\n}`, Demo: () => <><Button variant="ghost">次要操作</Button><Button variant="danger">危险操作</Button></> },
-      { id: 'disabled', title: 'Disabled', code: `import { Button } from '@chenxing/ui'\n\nexport function Disabled() {\n  return <Button aria-disabled="true">不可用</Button>\n}`, Demo: () => <Button aria-disabled="true">不可用</Button> },
+      { id: 'usage', title: 'Usage', Demo: () => <Button icon="rocket">主要操作</Button> },
+      { id: 'variants', title: 'Variants', Demo: () => <><Button variant="ghost">次要操作</Button><Button variant="danger">危险操作</Button></> },
+      { id: 'disabled', title: 'Disabled', Demo: () => <Button aria-disabled="true">不可用</Button> },
     ],
   },
   {
@@ -85,8 +85,8 @@ export const PRIMITIVE_ENTRIES: DemoEntry[] = [
       </>
     ),
     examples: [
-      { id: 'usage', title: 'Usage', code: `import { Badge } from '@chenxing/ui'\n\nexport function Example() {\n  return <Badge tone="success">已启用</Badge>\n}`, Demo: () => <Badge tone="success">已启用</Badge> },
-      { id: 'tones', title: 'Tones', code: `import { Badge } from '@chenxing/ui'\n\nexport function Tones() {\n  return (\n    <>\n      <Badge>默认</Badge>\n      <Badge tone="warning">待处理</Badge>\n      <Badge tone="gold">尊享</Badge>\n    </>\n  )\n}`, Demo: () => <><Badge>默认</Badge><Badge tone="warning">待处理</Badge><Badge tone="gold">尊享</Badge></> },
+      { id: 'usage', title: 'Usage', Demo: () => <Badge tone="success">已启用</Badge> },
+      { id: 'tones', title: 'Tones', Demo: () => <><Badge>默认</Badge><Badge tone="warning">待处理</Badge><Badge tone="gold">尊享</Badge></> },
     ],
   },
   {
@@ -96,8 +96,8 @@ export const PRIMITIVE_ENTRIES: DemoEntry[] = [
     wide: true,
     Demo: ChipDemo,
     examples: [
-      { id: 'usage', title: 'Usage', code: `import { Chip } from '@chenxing/ui'\n\nexport function Example() {\n  return <Chip color="accent">openid</Chip>\n}`, Demo: () => <Chip color="accent">openid</Chip> },
-      { id: 'colors', title: 'Colors', code: `import { Chip } from '@chenxing/ui'\n\nexport function Colors() {\n  return (\n    <>\n      <Chip>Default</Chip><Chip color="success">Success</Chip>\n      <Chip color="warning">Warning</Chip><Chip color="danger">Danger</Chip>\n    </>\n  )\n}`, Demo: () => <><Chip>Default</Chip><Chip color="success">Success</Chip><Chip color="warning">Warning</Chip><Chip color="danger">Danger</Chip></> },
+      { id: 'usage', title: 'Usage', Demo: () => <Chip color="accent">openid</Chip> },
+      { id: 'colors', title: 'Colors', Demo: () => <><Chip>Default</Chip><Chip color="success">Success</Chip><Chip color="warning">Warning</Chip><Chip color="danger">Danger</Chip></> },
     ],
   },
   {

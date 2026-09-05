@@ -4,6 +4,31 @@ const rows = (...items: [string, string, string | undefined, string][]): PropRow
 const table = (heading: string, data: PropRow[]): PropTable => ({ heading, rows: data })
 
 export const PROPS: Record<string, PropTable[]> = {
+  'tag-input-field': [table('TagInputField Props', rows(
+    ['label', 'string', undefined, '输入框标签。'],
+    ['values', 'string[]', undefined, '已提交的标签列表。'],
+    ['draft', 'string', undefined, '当前输入内容。'],
+    ['onDraftChange', '(raw: string) => void', undefined, '更新输入内容。'],
+    ['onAdd', '() => void', undefined, '提交新增标签，由调用方校验并更新 values。'],
+    ['onRemove', '(value: string, index: number) => void', undefined, '移除指定标签。'],
+    ['onUpdate', '(value: string, index: number, nextValue: string) => boolean | void', undefined, '编辑标签；返回 false 时保留编辑状态。'],
+    ['addLabel', 'string', '添加', '添加按钮的可访问名称。'],
+    ['placeholder', 'string', undefined, '输入框占位文案。'],
+    ['hint', 'string', undefined, '辅助说明。'],
+    ['errorText', 'string', undefined, '校验错误，优先于 hint 显示。'],
+    ['disabled', 'boolean', 'false', '禁用输入与标签操作。'],
+    ['maxLength', 'number', undefined, '新增及编辑输入框的最大字符数。'],
+    ['onBlur', '() => void', undefined, '新增输入框失焦时触发。'],
+  ))],
+  'settings-action-row': [table('SettingsActionRow Props', rows(
+    ['title', 'string', undefined, '设置项标题。'],
+    ['description', 'ReactNode', undefined, '设置项说明。'],
+    ['icon', 'string', undefined, '前置图标。'],
+    ['status', 'ReactNode', undefined, '状态标记。'],
+    ['actions', 'ReactNode', undefined, '操作区，在窄屏中纵向排列。'],
+    ['accent', "'cyan' | 'gold'", 'cyan', '图标语义色。'],
+    ['className', 'string', undefined, '追加容器样式。'],
+  ))],
   'brand-mark': [table('BrandMark Props', rows(['className', 'string', 'h-8 w-8', '自定义 Logo 尺寸和样式。'], ['decorative', 'boolean', 'false', '是否对辅助技术隐藏品牌名称。']))],
   'brand-lockup': [table('BrandLockup Props', rows(['subtitle', 'string', '辰星认证中枢', 'Logo 下方的副标题。'], ['compact', 'boolean', 'false', '切换为顶栏紧凑版式。']))],
   button: [table('Button Props', rows(['children', 'ReactNode', undefined, '按钮内容。'], ['variant', "'primary' | 'ghost' | 'danger'", 'primary', '按钮的语义和视觉变体。'], ['icon', 'string', undefined, '前置 lucide 图标名称。'], ['aria-disabled', 'boolean | string', undefined, '保持可聚焦的逻辑禁用状态。'], ['className', 'string', undefined, '追加按钮样式。']))],

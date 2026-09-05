@@ -52,6 +52,26 @@ describe('TagInputField', () => {
     expect(onAdd).toHaveBeenCalledTimes(1)
   })
 
+  it('输入法组合期间 Enter 和 Backspace 不提交或移除标签', () => {
+    const { onAdd, onRemove } = renderField()
+    const input = screen.getByLabelText('允许的域名')
+    fireEvent.keyDown(input, { key: 'Enter', isComposing: true })
+    fireEvent.keyDown(input, { key: 'Enter', keyCode: 229 })
+    fireEvent.keyDown(input, { key: 'Backspace', isComposing: true })
+    expect(onAdd).not.toHaveBeenCalled()
+    expect(onRemove).not.toHaveBeenCalled()
+  })
+
+  it('编辑时输入法确认与取消不提前结束编辑', () => {
+    const { onUpdate } = renderField()
+    fireEvent.click(screen.getByRole('button', { name: '编辑 a.com' }))
+    const editor = screen.getByRole('textbox', { name: '编辑 a.com' })
+    fireEvent.keyDown(editor, { key: 'Enter', isComposing: true })
+    fireEvent.keyDown(editor, { key: 'Escape', isComposing: true })
+    expect(onUpdate).not.toHaveBeenCalled()
+    expect(screen.getByRole('textbox', { name: '编辑 a.com' })).toBe(editor)
+  })
+
   it('草稿为空时 Backspace 移除末位标签，草稿非空时不动列表', () => {
     const { onRemove } = renderField()
     fireEvent.keyDown(screen.getByLabelText('允许的域名'), { key: 'Backspace' })

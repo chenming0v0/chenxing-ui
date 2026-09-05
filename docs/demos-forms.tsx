@@ -61,14 +61,23 @@ function TagInputDemo() {
   const [draft, setDraft] = useState('')
   const [error, setError] = useState('')
 
+  function validate(domain: string, editingIndex = -1) {
+    if (domain.length > 253 || !domain.includes('.') || !domain.split('.').every((part) => /^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$/.test(part))) {
+      setError('请输入完整域名，例如 gmail.com')
+      return false
+    }
+    if (domains.some((value, index) => value === domain && index !== editingIndex)) {
+      setError('该域名已存在')
+      return false
+    }
+    setError('')
+    return true
+  }
+
   function addDomain() {
     const domain = draft.trim().toLowerCase()
-    if (!domain) return
-    if (!domain.includes('.')) {
-      setError('请输入完整域名，例如 gmail.com')
-      return
-    }
-    if (!domains.includes(domain)) setDomains((current) => [...current, domain])
+    if (!domain || !validate(domain)) return
+    setDomains((current) => [...current, domain])
     setDraft('')
     setError('')
   }
@@ -81,23 +90,29 @@ function TagInputDemo() {
         draft={draft}
         onDraftChange={(value) => { setDraft(value); if (error) setError('') }}
         onAdd={addDomain}
-        onRemove={(value) => setDomains((current) => current.filter((domain) => domain !== value))}
+        onRemove={(_, index) => { setDomains((current) => current.filter((_, itemIndex) => itemIndex !== index)); setError('') }}
         onUpdate={(value, index, nextValue) => {
           const domain = nextValue.trim().toLowerCase()
-          if (!domain.includes('.')) {
-            setError('请输入完整域名，例如 gmail.com')
-            return false
-          }
+          if (!validate(domain, index)) return false
           setDomains((current) => current.map((item, itemIndex) => itemIndex === index ? domain : item))
           setError('')
           return true
         }}
         errorText={error || undefined}
-        hint={error ? undefined : '按 Enter 或点击右侧 + 添加；输入框为空时按 Backspace 移除最后一项。'}
+        hint={error ? undefined : '允许使用这些域名的邮箱登录。'}
         placeholder="输入域名，例如 gmail.com"
       />
     </div>
   )
+}
+
+function SearchDemo() {
+  const [query, setQuery] = useState('')
+  const [submitted, setSubmitted] = useState<string | null>(null)
+  return <div className="w-full max-w-sm space-y-3">
+    <SearchField aria-label="搜索组件" placeholder="搜索组件" value={query} onChange={(event) => setQuery(event.target.value)} onSearch={() => setSubmitted(query.trim())} />
+    {submitted !== null ? <p className="chenxing-caption" role="status">{submitted ? `搜索内容：${submitted}` : '请输入搜索内容'}</p> : null}
+  </div>
 }
 
 export const FORM_ENTRIES: DemoEntry[] = [
@@ -112,24 +127,6 @@ export const FORM_ENTRIES: DemoEntry[] = [
       {
         id: 'usage',
         title: 'Usage',
-        code: `import { useState } from 'react'
-import { TagInputField } from '@chenxing/ui'
-
-export function Example() {
-  const [domains, setDomains] = useState(['qq.com'])
-  const [draft, setDraft] = useState('')
-  return (
-    <TagInputField
-      label="允许的邮箱域名"
-      values={domains}
-      draft={draft}
-      onDraftChange={setDraft}
-      onAdd={() => { if (draft) { setDomains([...domains, draft]); setDraft('') } }}
-      onRemove={(value) => setDomains(domains.filter((domain) => domain !== value))}
-      placeholder="输入域名，例如 gmail.com"
-    />
-  )
-}`,
         Demo: TagInputDemo,
       },
     ],
@@ -138,7 +135,7 @@ export function Example() {
     slug: 'search-field',
     name: 'SearchField',
     description: '带搜索图标的输入框，按 Enter 触发查询。',
-    Demo: () => <SearchField aria-label="搜索组件" placeholder="搜索组件" onSearch={() => window.alert('搜索已提交')} />,
+    Demo: SearchDemo,
   },
   {
     slug: 'field',
@@ -151,8 +148,8 @@ export function Example() {
       </div>
     ),
     examples: [
-      { id: 'usage', title: 'Usage', code: `import { Field } from '@chenxing/ui'\n\nexport function Example() {\n  return <Field label="用户名" placeholder="chenxing" />\n}`, Demo: () => <Field label="用户名" placeholder="chenxing" /> },
-      { id: 'error', title: 'Error', code: `import { Field } from '@chenxing/ui'\n\nexport function ErrorState() {\n  return <Field label="邮箱" errorText="邮箱格式不正确" defaultValue="not-an-email" />\n}`, Demo: () => <Field label="邮箱" errorText="邮箱格式不正确" defaultValue="not-an-email" /> },
+      { id: 'usage', title: 'Usage', Demo: () => <Field label="用户名" placeholder="chenxing" /> },
+      { id: 'error', title: 'Error', Demo: () => <Field label="邮箱" errorText="邮箱格式不正确" defaultValue="not-an-email" /> },
     ],
   },
   {
@@ -181,7 +178,7 @@ export function Example() {
     description: 'ARIA 1.2 select-only combobox，弹层随主题走、支持键盘导航与禁用项。',
     Demo: SelectDemo,
     examples: [
-      { id: 'usage', title: 'Usage', code: `import { Select } from '@chenxing/ui'\n\nexport function Example() {\n  return (\n    <Select aria-label="选择区域" value="" onChange={() => {}}\n      options={[{ value: "cn", label: "中国大陆" }]} />\n  )\n}`, Demo: SelectDemo },
+      { id: 'usage', title: 'Usage', Demo: SelectDemo },
     ],
   },
   {
@@ -196,8 +193,8 @@ export function Example() {
     description: 'role=switch 的开关，禁用态自动降低不透明度。',
     Demo: SwitchDemo,
     examples: [
-      { id: 'usage', title: 'Usage', code: `import { useState } from 'react'\nimport { Switch } from '@chenxing/ui'\n\nexport function Example() {\n  const [enabled, setEnabled] = useState(true)\n  return <Switch checked={enabled} onChange={setEnabled} label="两步验证" />\n}`, Demo: () => { const [enabled, setEnabled] = useState(true); return <Switch checked={enabled} onChange={setEnabled} label="两步验证" /> } },
-      { id: 'disabled', title: 'Disabled', code: `import { Switch } from '@chenxing/ui'\n\nexport function Disabled() {\n  return <Switch checked={false} onChange={() => {}} disabled label="不可用" />\n}`, Demo: () => <Switch checked={false} onChange={() => {}} disabled label="不可用" /> },
+      { id: 'usage', title: 'Usage', Demo: () => { const [enabled, setEnabled] = useState(true); return <Switch checked={enabled} onChange={setEnabled} label="两步验证" /> } },
+      { id: 'disabled', title: 'Disabled', Demo: () => <Switch checked={false} onChange={() => {}} disabled label="不可用" /> },
     ],
   },
   {

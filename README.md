@@ -40,9 +40,16 @@
 
 ```bash
 npm install
+npm run dev
 npm run typecheck
 npm test
+npm run build
 ```
+
+文档站使用夜晚主题，开发地址为 `http://localhost:5176`。
+组件预览登记在 `docs/demos-*.tsx`；代码示例由 TypeScript 语法树从对应的
+`Demo` 实现和本文件依赖中生成，修改演示后会同步更新。`npm test` 会检查所有
+生成示例的类型，避免展示代码与实际预览不一致。API 说明维护在 `docs/props.ts`。
 
 ## 设计规约
 

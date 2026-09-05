@@ -67,7 +67,7 @@ export function TagInputField({
   }
 
   function onDraftKeyDown(event: KeyboardEvent<HTMLInputElement>) {
-    if (disabled) return
+    if (disabled || event.nativeEvent.isComposing || event.keyCode === 229) return
     if (event.key === 'Enter') {
       event.preventDefault()
       onAdd()
@@ -81,6 +81,7 @@ export function TagInputField({
   }
 
   function onEditKeyDown(event: KeyboardEvent<HTMLInputElement>, index: number) {
+    if (disabled || event.nativeEvent.isComposing || event.keyCode === 229) return
     if (event.key === 'Enter') {
       event.preventDefault()
       commitEdit(index)

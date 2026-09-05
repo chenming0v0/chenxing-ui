@@ -1,4 +1,5 @@
 import type { ComponentType } from 'react'
+import exampleSources from 'virtual:docs-examples'
 
 export type PropRow = {
   name: string
@@ -38,20 +39,16 @@ export type DemoEntry = {
   badge?: 'new' | 'updated'
   Demo: ComponentType
   /** 详情页分段示例；缺省时回落到单个 Usage（Demo） */
-  examples?: DemoExample[]
+  examples?: Omit<DemoExample, 'code'>[]
 }
 
 export function getExamples(entry: DemoEntry): DemoExample[] {
-  if (entry.examples && entry.examples.length > 0) return entry.examples
-  const names = importNames(entry)
-  const component = names[0] ?? entry.name
-  return [{
-    id: 'usage',
-    title: 'Usage',
-    Demo: entry.Demo,
-    code: `import { ${names.join(', ')} } from '@chenxing/ui'\n\nexport function Example() {\n  return <${component} />\n}`,
-    bare: entry.bare,
-  }]
+  const examples = entry.examples?.length ? entry.examples : [{ id: 'usage', title: '用法', Demo: entry.Demo, bare: entry.bare }]
+  return examples.map((example) => {
+    const code = exampleSources[`${entry.slug}/${example.id}`]
+    if (!code) throw new Error(`Missing example source: ${entry.slug}/${example.id}`)
+    return { ...example, code }
+  })
 }
 
 export function importNames(entry: DemoEntry): string[] {
