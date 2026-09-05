@@ -30,6 +30,7 @@ export const PROPS: Record<string, PropTable[]> = {
     ['className', 'string', undefined, '追加容器样式。'],
   ))],
   'brand-mark': [table('BrandMark Props', rows(['className', 'string', 'h-8 w-8', '自定义 Logo 尺寸和样式。'], ['decorative', 'boolean', 'false', '是否对辅助技术隐藏品牌名称。']))],
+  'flow-gold-text': [table('FlowGoldText Props', rows(['children', 'ReactNode', undefined, '要显示的品牌文字。'], ['as', "'span' | 'strong' | 'p' | 'div' | 'h1' | 'h2' | 'h3'", 'span', '选择语义 HTML 根元素。'], ['animated', 'boolean', 'true', '是否播放流金扫光；系统开启减少动态效果时自动静止。'], ['className', 'string', undefined, '追加字号、间距等样式。']))],
   'brand-lockup': [table('BrandLockup Props', rows(['subtitle', 'string', '辰星认证中枢', 'Logo 下方的副标题。'], ['compact', 'boolean', 'false', '切换为顶栏紧凑版式。']))],
   button: [table('Button Props', rows(['children', 'ReactNode', undefined, '按钮内容。'], ['variant', "'primary' | 'ghost' | 'danger'", 'primary', '按钮的语义和视觉变体。'], ['icon', 'string', undefined, '前置 lucide 图标名称。'], ['aria-disabled', 'boolean | string', undefined, '保持可聚焦的逻辑禁用状态。'], ['className', 'string', undefined, '追加按钮样式。']))],
   badge: [table('Badge Props', rows(['children', 'ReactNode', undefined, '徽章内容。'], ['tone', "'neutral' | 'success' | 'warning' | 'gold'", 'neutral', '徽章的语义色调。']))],

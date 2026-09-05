@@ -39,8 +39,8 @@ describe('BrandLockup accessible name（#636）', () => {
     const wordmarks = screen.getAllByText('天穹辰星')
     expect(wordmarks).toHaveLength(2)
     for (const wordmark of wordmarks) {
-      expect(wordmark.className).toContain('chenxing-text-shimmer')
-      expect(wordmark.className).toContain('chenxing-wordmark')
+      expect(wordmark.className).toContain('chenxing-flow-gold-text')
+      expect(wordmark.className).toContain('is-animated')
     }
   })
 

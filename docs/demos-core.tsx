@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import {
-  Avatar, Badge, BrandLockup, BrandMark, Button, Chip, CopyValue, EmptyState, Icon, Notice, PageIntro,
+  Avatar, Badge, BrandLockup, BrandMark, Button, Chip, CopyValue, EmptyState, FlowGoldText, Icon, Notice, PageIntro,
 } from '../src'
 import type { DemoEntry } from './registry'
 
@@ -35,6 +35,22 @@ export const BRAND_ENTRIES: DemoEntry[] = [
     name: 'BrandMark',
     description: '产品 Logo 图标；decorative 时对屏幕阅读器隐藏。',
     Demo: () => <BrandMark className="h-14 w-14 rounded-[var(--chenxing-radius-md)]" />,
+  },
+  {
+    slug: 'flow-gold-text',
+    name: 'FlowGoldText',
+    description: '品牌专用流金文字；默认动态扫光，也可切换为静态渐变。',
+    Demo: () => (
+      <div className="flex flex-col items-center gap-3">
+        <FlowGoldText className="text-2xl">天穹辰星</FlowGoldText>
+        <FlowGoldText animated={false} className="text-base">辰星设计体系</FlowGoldText>
+      </div>
+    ),
+    examples: [
+      { id: 'usage', title: 'Usage', Demo: () => <FlowGoldText className="text-3xl">天穹辰星</FlowGoldText> },
+      { id: 'heading', title: 'Heading', Demo: () => <FlowGoldText as="h2" className="text-3xl">辰星设计体系</FlowGoldText> },
+      { id: 'static', title: 'Static', Demo: () => <FlowGoldText animated={false} className="text-xl">天穹辰星</FlowGoldText> },
+    ],
   },
   {
     slug: 'brand-lockup',

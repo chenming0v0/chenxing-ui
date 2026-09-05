@@ -2,6 +2,7 @@ import { getExamples, importNames, type DemoEntry } from './registry'
 import { PROPS } from './props'
 
 const SOURCE_FILES: Record<string, string> = {
+  'flow-gold-text': 'flow-gold-text.tsx',
   'tag-input-field': 'tag-input.tsx', select: 'select.tsx', 'select-field': 'select.tsx',
   'settings-action-row': 'settings-action-row.tsx', table: 'data-table.tsx', drawer: 'drawer.tsx',
   'avatar-editor': 'avatar-editor.tsx', reveal: 'motion.tsx', 'count-up': 'motion.tsx',
