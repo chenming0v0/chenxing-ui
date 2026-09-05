@@ -63,7 +63,7 @@ export function BrandLockup({ subtitle = '辰星认证中枢', compact = false }
     <span className="flex items-center gap-2.5">
       <BrandMark decorative className={compact ? 'chenxing-brand-logo' : 'h-8 w-8 rounded-[var(--chenxing-radius-md)]'} />
       <span className={compact ? undefined : 'hidden sm:block'}>
-        <span className={compact ? 'chenxing-wordmark text-aurora block text-base' : 'chenxing-body block text-sm font-semibold leading-tight'}>天穹辰星</span>
+        <span className={`chenxing-wordmark chenxing-text-shimmer block ${compact ? 'text-base' : 'text-lg'} font-semibold leading-tight`}>天穹辰星</span>
         <span className={compact ? 'chenxing-mono block text-[9px] uppercase tracking-[0.24em] text-[var(--chenxing-muted-foreground)]' : 'chenxing-caption block text-[10px] leading-tight tracking-[0.08em]'}>{subtitle}</span>
       </span>
     </span>
