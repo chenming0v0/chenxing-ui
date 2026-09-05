@@ -1,5 +1,28 @@
 import type { ComponentType } from 'react'
 
+export type PropRow = {
+  name: string
+  type: string
+  default?: string
+  description: string
+}
+
+export type PropTable = {
+  heading: string
+  rows: PropRow[]
+}
+
+/** 组件页上的一个示例块：标题 + 实时预览 + 可展开代码 */
+export type DemoExample = {
+  id: string
+  title: string
+  description?: string
+  code: string
+  Demo: ComponentType
+  /** 全屏/fixed 遮罩：预览区不加玻璃、给足高度 */
+  bare?: boolean
+}
+
 /** 单个组件的展示条目：主页渲染成卡片，组件页渲染成整页演示 */
 export type DemoEntry = {
   slug: string
@@ -12,7 +35,28 @@ export type DemoEntry = {
   /** 依赖 position:fixed 全屏遮罩的组件：主页玻璃卡的 backdrop-filter
       会把 fixed 后代困在卡内，因此只在组件页做实时演示 */
   bare?: boolean
+  badge?: 'new' | 'updated'
   Demo: ComponentType
+  /** 详情页分段示例；缺省时回落到单个 Usage（Demo） */
+  examples?: DemoExample[]
+}
+
+export function getExamples(entry: DemoEntry): DemoExample[] {
+  if (entry.examples && entry.examples.length > 0) return entry.examples
+  const names = importNames(entry)
+  const component = names[0] ?? entry.name
+  return [{
+    id: 'usage',
+    title: 'Usage',
+    Demo: entry.Demo,
+    code: `import { ${names.join(', ')} } from '@chenxing/ui'\n\nexport function Example() {\n  return <${component} />\n}`,
+    bare: entry.bare,
+  }]
+}
+
+export function importNames(entry: DemoEntry): string[] {
+  const raw = entry.imports ?? [entry.name]
+  return raw.flatMap((name) => name.split(/\s*[+/]\s*/)).map((name) => name.trim()).filter(Boolean)
 }
 
 export type DemoCategory = {
@@ -47,4 +91,8 @@ export function findEntry(slug: string): { category: DemoCategory; entry: DemoEn
     if (entry) return { category, entry }
   }
   return null
+}
+
+export function allEntries(): DemoEntry[] {
+  return CATEGORIES.flatMap((category) => category.entries)
 }

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import {
-  Field, FieldShell, Icon, PasswordField, Select, SelectField, Switch, TextAreaField, ToggleRow,
+  Field, FieldShell, Icon, PasswordField, SearchField, Select, SelectField, Switch, TagInputField, TextAreaField, ToggleRow,
 } from '../src'
 import type { DemoEntry } from './registry'
 
@@ -56,7 +56,90 @@ function ToggleRowDemo() {
   )
 }
 
+function TagInputDemo() {
+  const [domains, setDomains] = useState(['qq.com', 'example.com'])
+  const [draft, setDraft] = useState('')
+  const [error, setError] = useState('')
+
+  function addDomain() {
+    const domain = draft.trim().toLowerCase()
+    if (!domain) return
+    if (!domain.includes('.')) {
+      setError('请输入完整域名，例如 gmail.com')
+      return
+    }
+    if (!domains.includes(domain)) setDomains((current) => [...current, domain])
+    setDraft('')
+    setError('')
+  }
+
+  return (
+    <div className="w-full max-w-2xl">
+      <TagInputField
+        label="允许的邮箱域名"
+        values={domains}
+        draft={draft}
+        onDraftChange={(value) => { setDraft(value); if (error) setError('') }}
+        onAdd={addDomain}
+        onRemove={(value) => setDomains((current) => current.filter((domain) => domain !== value))}
+        onUpdate={(value, index, nextValue) => {
+          const domain = nextValue.trim().toLowerCase()
+          if (!domain.includes('.')) {
+            setError('请输入完整域名，例如 gmail.com')
+            return false
+          }
+          setDomains((current) => current.map((item, itemIndex) => itemIndex === index ? domain : item))
+          setError('')
+          return true
+        }}
+        errorText={error || undefined}
+        hint={error ? undefined : '按 Enter 或点击右侧 + 添加；输入框为空时按 Backspace 移除最后一项。'}
+        placeholder="输入域名，例如 gmail.com"
+      />
+    </div>
+  )
+}
+
 export const FORM_ENTRIES: DemoEntry[] = [
+  {
+    slug: 'tag-input-field',
+    name: 'TagInputField',
+    description: '把可移除的标签与输入框收进同一个 field shell，适合域名、邮箱、权限等列表编辑。',
+    imports: ['TagInputField'],
+    wide: true,
+    Demo: TagInputDemo,
+    examples: [
+      {
+        id: 'usage',
+        title: 'Usage',
+        code: `import { useState } from 'react'
+import { TagInputField } from '@chenxing/ui'
+
+export function Example() {
+  const [domains, setDomains] = useState(['qq.com'])
+  const [draft, setDraft] = useState('')
+  return (
+    <TagInputField
+      label="允许的邮箱域名"
+      values={domains}
+      draft={draft}
+      onDraftChange={setDraft}
+      onAdd={() => { if (draft) { setDomains([...domains, draft]); setDraft('') } }}
+      onRemove={(value) => setDomains(domains.filter((domain) => domain !== value))}
+      placeholder="输入域名，例如 gmail.com"
+    />
+  )
+}`,
+        Demo: TagInputDemo,
+      },
+    ],
+  },
+  {
+    slug: 'search-field',
+    name: 'SearchField',
+    description: '带搜索图标的输入框，按 Enter 触发查询。',
+    Demo: () => <SearchField aria-label="搜索组件" placeholder="搜索组件" onSearch={() => window.alert('搜索已提交')} />,
+  },
   {
     slug: 'field',
     name: 'Field',
@@ -67,6 +150,10 @@ export const FORM_ENTRIES: DemoEntry[] = [
         <Field label="邮箱" icon="mail" errorText="邮箱格式不正确" defaultValue="not-an-email" />
       </div>
     ),
+    examples: [
+      { id: 'usage', title: 'Usage', code: `import { Field } from '@chenxing/ui'\n\nexport function Example() {\n  return <Field label="用户名" placeholder="chenxing" />\n}`, Demo: () => <Field label="用户名" placeholder="chenxing" /> },
+      { id: 'error', title: 'Error', code: `import { Field } from '@chenxing/ui'\n\nexport function ErrorState() {\n  return <Field label="邮箱" errorText="邮箱格式不正确" defaultValue="not-an-email" />\n}`, Demo: () => <Field label="邮箱" errorText="邮箱格式不正确" defaultValue="not-an-email" /> },
+    ],
   },
   {
     slug: 'password-field',
@@ -93,6 +180,9 @@ export const FORM_ENTRIES: DemoEntry[] = [
     name: 'Select',
     description: 'ARIA 1.2 select-only combobox，弹层随主题走、支持键盘导航与禁用项。',
     Demo: SelectDemo,
+    examples: [
+      { id: 'usage', title: 'Usage', code: `import { Select } from '@chenxing/ui'\n\nexport function Example() {\n  return (\n    <Select aria-label="选择区域" value="" onChange={() => {}}\n      options={[{ value: "cn", label: "中国大陆" }]} />\n  )\n}`, Demo: SelectDemo },
+    ],
   },
   {
     slug: 'select-field',
@@ -105,6 +195,10 @@ export const FORM_ENTRIES: DemoEntry[] = [
     name: 'Switch',
     description: 'role=switch 的开关，禁用态自动降低不透明度。',
     Demo: SwitchDemo,
+    examples: [
+      { id: 'usage', title: 'Usage', code: `import { useState } from 'react'\nimport { Switch } from '@chenxing/ui'\n\nexport function Example() {\n  const [enabled, setEnabled] = useState(true)\n  return <Switch checked={enabled} onChange={setEnabled} label="两步验证" />\n}`, Demo: () => { const [enabled, setEnabled] = useState(true); return <Switch checked={enabled} onChange={setEnabled} label="两步验证" /> } },
+      { id: 'disabled', title: 'Disabled', code: `import { Switch } from '@chenxing/ui'\n\nexport function Disabled() {\n  return <Switch checked={false} onChange={() => {}} disabled label="不可用" />\n}`, Demo: () => <Switch checked={false} onChange={() => {}} disabled label="不可用" /> },
+    ],
   },
   {
     slug: 'toggle-row',
