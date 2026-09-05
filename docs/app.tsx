@@ -18,7 +18,7 @@ function useHash() {
 }
 
 function GalleryCard({ entry }: { entry: DemoEntry }) {
-  return <article className="docs-gallery-card">
+  return <article className={`docs-gallery-card${entry.wide ? ' docs-gallery-card-wide' : ''}`}>
     <div className="docs-gallery-card-preview" inert aria-hidden="true">
       {entry.bare ? <Code2 size={28} className="docs-gallery-symbol" /> : <entry.Demo />}
     </div>

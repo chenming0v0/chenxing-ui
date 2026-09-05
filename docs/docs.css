@@ -144,6 +144,7 @@ html, body { background: var(--docs-bg); color: var(--docs-text); }
 .docs-gallery-section h2 span { color: var(--docs-subtle); font-size: 12px; font-weight: 400; }
 .docs-gallery-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
 .docs-gallery-card { position: relative; min-width: 0; overflow: hidden; border: 1px solid var(--docs-line); border-radius: 8px; background: var(--docs-surface); }
+.docs-gallery-card-wide { grid-column: span 2; }
 .docs-gallery-card:hover, .docs-gallery-card:focus-within { border-color: var(--docs-line-strong); }
 .docs-gallery-card-preview { height: 184px; display: flex; flex-wrap: wrap; gap: 10px; align-content: center; align-items: center; justify-content: center; padding: 22px; overflow: hidden; background: #0c0e13; color: var(--chenxing-foreground); }
 .docs-gallery-card-preview > * { min-width: 0; max-width: 100%; }
@@ -212,6 +213,7 @@ html, body { background: var(--docs-bg); color: var(--docs-text); }
   .docs-section-heading { font-size: 20px; }
   .docs-preview-stage { min-height: 220px; padding: 28px 16px; }
   .docs-gallery-grid { grid-template-columns: 1fr; }
+  .docs-gallery-card-wide { grid-column: auto; }
   .docs-gallery-filter { flex-wrap: wrap; gap: 12px; }
   .docs-gallery-search-wrap { width: 100%; }
   .docs-modal-backdrop:not(.docs-menu-backdrop) { padding: 16px; }

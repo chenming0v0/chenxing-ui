@@ -68,4 +68,11 @@ describe('documentation navigation', () => {
     render(<App />)
     expect(screen.getByRole('heading', { name: '页面不存在' })).toBeTruthy()
   })
+
+  it('lets wide gallery entries span two desktop columns', () => {
+    window.history.replaceState(null, '', '/#/')
+    render(<App />)
+    const tableLink = screen.getByRole('link', { name: '查看 TablePanel + DataTable + TablePagination' })
+    expect(tableLink.parentElement?.className).toContain('docs-gallery-card-wide')
+  })
 })
