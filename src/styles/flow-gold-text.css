@@ -1,0 +1,18 @@
+.chenxing-flow-gold-text {
+  font-family: var(--chenxing-font-display, sans-serif);
+  font-weight: 700;
+  letter-spacing: 0;
+  max-inline-size: 100%;
+  overflow-wrap: anywhere;
+  background-position: 50% 0;
+}
+
+.chenxing-flow-gold-text.is-static { animation: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .chenxing-flow-gold-text { animation: none; }
+}
+
+@media (forced-colors: active) {
+  .chenxing-flow-gold-text { background: none; color: CanvasText; }
+}

@@ -34,6 +34,16 @@ describe('BrandLockup accessible name（#636）', () => {
     expect(screen.getByText('用户中心')).toBeTruthy()
   })
 
+  it('uses the animated gold wordmark in regular and compact lockups', () => {
+    render(<><BrandLockup /><BrandLockup compact /></>)
+    const wordmarks = screen.getAllByText('天穹辰星')
+    expect(wordmarks).toHaveLength(2)
+    for (const wordmark of wordmarks) {
+      expect(wordmark.className).toContain('chenxing-flow-gold-text')
+      expect(wordmark.className).toContain('is-animated')
+    }
+  })
+
   it('keeps standalone brand marks named', () => {
     const { unmount } = render(<BrandMark />)
     expect(screen.getByRole('img').getAttribute('alt')).toBe('天穹辰星')
