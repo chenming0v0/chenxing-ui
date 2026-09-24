@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { AvatarContent, BrandMark, Button, ErrorBoundary, Icon, Topbar, TopbarAccountPanel, TopbarNavRow, TopbarQuotaCard } from '../src'
+import { AvatarContent, BrandLockup, BrandMark, Button, ErrorBoundary, Icon, SideNav, Topbar, TopbarAccountPanel, TopbarNavRow, TopbarQuotaCard } from '../src'
 import type { DemoEntry } from './registry'
 
 function TopbarDemo() {
@@ -94,6 +94,30 @@ function ErrorBoundaryDemo() {
   )
 }
 
+const SIDE_NAV_GROUPS = [
+  { label: '账户', items: [{ label: '总览', href: '#/c/side-nav', icon: 'layout-grid' }, { label: '钱包', href: '#/c/side-nav/wallet', icon: 'wallet' }] },
+  { label: '开发者', items: [{ label: '接入应用', href: '#/c/side-nav/apps', icon: 'code-2' }] },
+  { label: '管理', items: [{ label: '仪表盘', href: '#/c/side-nav/admin', icon: 'gauge' }, { label: '用户管理', href: '#/c/side-nav/users', icon: 'users' }] },
+]
+
+function SideNavDemo() {
+  const [path, setPath] = useState('#/c/side-nav')
+  return (
+    /* transform 让 fixed 定位的侧栏/底栏困在演示框内；真实页面里它们贴视口 */
+    <div className="relative h-[26rem] w-full overflow-hidden [transform:translateZ(0)]">
+      <SideNav
+        groups={SIDE_NAV_GROUPS}
+        currentPath={path}
+        brand={<BrandLockup subtitle="用户中心" compact />}
+        renderLink={({ href, ...props }) => (
+          <a href={href} {...props} onClick={(event) => { event.preventDefault(); setPath(href) }} />
+        )}
+      />
+      <div className="chenxing-sidenav-main p-6 chenxing-caption">页面主列加 .chenxing-sidenav-main 让出侧栏宽度 / 底栏高度。</div>
+    </div>
+  )
+}
+
 export const SHELL_ENTRIES: DemoEntry[] = [
   {
     slug: 'topbar',
@@ -102,6 +126,14 @@ export const SHELL_ENTRIES: DemoEntry[] = [
     imports: ['Topbar', 'TopbarNavRow', 'TopbarAccountPanel', 'TopbarQuotaCard'],
     bare: true,
     Demo: TopbarDemo,
+  },
+  {
+    slug: 'side-nav',
+    name: 'SideNav',
+    description: '分组侧边导航，桌面与移动端一体：≥1024px 为固定左侧栏；<1024px 侧栏隐藏，改为只承载当前分组的底栏，右端「全部」按钮打开按分组列出全部页面的贴底面板。链接经 renderLink 注入，可接任意路由库。',
+    bare: true,
+    badge: 'new',
+    Demo: SideNavDemo,
   },
   {
     slug: 'error-boundary',

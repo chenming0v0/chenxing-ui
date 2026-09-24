@@ -34,6 +34,7 @@ export { TagInputField, type TagInputFieldProps } from './components/tag-input'
 export { Select, SelectField, type SelectOption } from './components/select'
 
 // 全局顶栏（漂浮玻璃胶囊 + 胶囊内手风琴汉堡菜单）
+export { SideNav, type SideNavGroup, type SideNavItem, type SideNavLinkProps, type SideNavProps } from './components/side-nav'
 export { TopbarSubnav, type TopbarSubnavItem } from './components/topbar-subnav'
 export { Topbar, TopbarAccountPanel, TopbarNavRow, TopbarQuotaCard, useAccordionHeight, useExitDelay, useNavDisclosure, useTopbarExpanded } from './components/topbar'
 

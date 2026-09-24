@@ -1,0 +1,195 @@
+/* ---------- SideNav：分组侧边导航（桌面侧栏 + 移动端底栏 / 「全部」面板） ----------
+   两套导航同时渲染，只由 1024px 断点切换显隐；页面主列加 .chenxing-sidenav-main
+   让出侧栏宽度（桌面）或底栏高度（移动端）。 */
+:root {
+  --chenxing-sidebar-width: 15rem;
+  /* 移动端底栏占用的高度（含安全区），主列按它留白 */
+  --chenxing-bottom-nav-space: calc(5rem + env(safe-area-inset-bottom));
+}
+
+.chenxing-sidenav-main { min-width: 0; }
+@media (min-width: 1024px) {
+  .chenxing-sidenav-main { margin-left: var(--chenxing-sidebar-width); }
+}
+@media (max-width: 1023px) {
+  .chenxing-sidenav-main { padding-bottom: var(--chenxing-bottom-nav-space); }
+}
+
+/* ---------- 桌面侧栏 ---------- */
+.chenxing-sidebar {
+  position: fixed;
+  top: 0; left: 0; bottom: 0;
+  z-index: var(--chenxing-z-nav);
+  display: none;
+  flex-direction: column;
+  width: var(--chenxing-sidebar-width);
+  padding: 1.25rem 0.9rem;
+  background: linear-gradient(180deg, rgba(9, 15, 28, 0.92), rgba(5, 8, 17, 0.94));
+  backdrop-filter: blur(24px) saturate(1.5);
+  -webkit-backdrop-filter: blur(24px) saturate(1.5);
+  border-right: 1px solid var(--chenxing-border);
+}
+@media (min-width: 1024px) {
+  .chenxing-sidebar { display: flex; }
+}
+.chenxing-sidebar-brand { display: flex; align-items: center; gap: 0.75rem; padding: 0 0.5rem; margin-bottom: 1.25rem; }
+.chenxing-sidebar-scroll,
+.cx-bottom-nav-scroll,
+.cx-nav-sheet-scroll { scrollbar-width: none; -ms-overflow-style: none; }
+.chenxing-sidebar-scroll::-webkit-scrollbar,
+.cx-bottom-nav-scroll::-webkit-scrollbar,
+.cx-nav-sheet-scroll::-webkit-scrollbar { display: none; }
+.chenxing-sidebar-scroll { flex: 1; min-height: 0; overflow-y: auto; }
+
+.chenxing-nav-label {
+  padding: 0 0.75rem;
+  margin-top: 1.1rem;
+  margin-bottom: 0.4rem;
+  font-family: var(--chenxing-font-body);
+  font-size: 0.9375rem;
+  letter-spacing: 0.08em;
+  color: var(--chenxing-muted-foreground);
+}
+.chenxing-nav-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.6rem 0.75rem;
+  font-family: var(--chenxing-font-body);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--chenxing-muted-foreground);
+  border-radius: var(--chenxing-radius-md);
+  transition: color 0.18s, background 0.18s;
+  cursor: pointer;
+}
+.chenxing-nav-item:hover { color: var(--chenxing-foreground); background: var(--chenxing-muted); }
+.chenxing-nav-item:focus-visible { outline: 2px solid var(--chenxing-cyan); outline-offset: -2px; }
+.chenxing-nav-item[aria-current="page"] {
+  color: var(--chenxing-foreground);
+  background: var(--chenxing-primary-soft);
+  box-shadow: inset 0 0 0 1px rgba(56, 189, 248, 0.28);
+}
+/* 激活竖条贴在侧栏左边缘（-0.9rem 抵消侧栏内边距） */
+.chenxing-sidebar .chenxing-nav-item[aria-current="page"]::before {
+  content: "";
+  position: absolute;
+  left: -0.9rem;
+  top: 50%;
+  height: 1.4rem;
+  width: 3px;
+  transform: translateY(-50%);
+  border-radius: 0 var(--chenxing-radius-pill) var(--chenxing-radius-pill) 0;
+  background: linear-gradient(180deg, var(--chenxing-primary), var(--chenxing-cyan));
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.7);
+}
+.chenxing-nav-item[aria-current="page"] svg { color: var(--chenxing-cyan); }
+
+/* ---------- 移动端底栏：只承载当前分组，条目多于一屏时横滑 ---------- */
+.chenxing-bottom-nav {
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  z-index: var(--chenxing-z-nav);
+  display: flex;
+  align-items: stretch;
+  gap: 0.15rem;
+  padding: 0.4rem 0.5rem calc(0.4rem + env(safe-area-inset-bottom));
+  background: linear-gradient(180deg, rgba(6, 10, 20, 0.82), rgba(4, 6, 13, 0.96));
+  backdrop-filter: blur(20px) saturate(1.5);
+  -webkit-backdrop-filter: blur(20px) saturate(1.5);
+  border-top: 1px solid var(--chenxing-border);
+}
+@media (min-width: 1024px) {
+  .chenxing-bottom-nav,
+  .cx-nav-sheet-overlay { display: none; }
+}
+.chenxing-bottom-tab {
+  flex: 1;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.2rem;
+  padding: 0.45rem 0.2rem;
+  font-family: var(--chenxing-font-body);
+  font-size: 0.625rem;
+  color: var(--chenxing-muted-foreground);
+  border-radius: var(--chenxing-radius-md);
+  transition: color 0.2s, background 0.2s;
+  cursor: pointer;
+}
+.chenxing-bottom-tab[aria-current="page"] {
+  color: var(--chenxing-cyan);
+  background: var(--chenxing-cyan-soft);
+}
+/* min-width 保证单手可点的命中区，scroll-snap 让滑动停在整条上 */
+.cx-bottom-nav-scroll {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  gap: 0.15rem;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x proximity;
+  -webkit-overflow-scrolling: touch;
+}
+.cx-bottom-nav-scroll .chenxing-bottom-tab {
+  flex: 0 0 auto;
+  min-width: 4.25rem;
+  min-height: 2.75rem;
+  scroll-snap-align: start;
+}
+/* 「全部」固定在右端不参与滚动：跨分组切换的唯一出口 */
+.cx-bottom-more {
+  flex: 0 0 auto;
+  min-width: 3.5rem;
+  min-height: 2.75rem;
+  padding-left: 0.55rem;
+  border-left: 1px solid var(--chenxing-border);
+  border-radius: 0 var(--chenxing-radius-md) var(--chenxing-radius-md) 0;
+}
+.cx-bottom-more[aria-expanded="true"] {
+  color: var(--chenxing-cyan);
+  background: var(--chenxing-cyan-soft);
+}
+
+/* ---------- 移动端「全部」面板：贴底升起，按分组列出全部页面 ---------- */
+.cx-nav-sheet-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--chenxing-z-overlay);
+  display: flex;
+  align-items: flex-end;
+  background: rgba(2, 4, 10, 0.72);
+  animation: cx-nav-sheet-fade 0.2s ease both;
+}
+.cx-nav-sheet {
+  width: 100%;
+  max-height: 78dvh;
+  display: flex;
+  flex-direction: column;
+  /* HudPanel 默认 2rem 内边距是给桌面卡片的，窄屏会吃掉列表宽度 */
+  padding: 1.15rem 1rem calc(0.9rem + env(safe-area-inset-bottom));
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  animation: cx-nav-sheet-up 0.26s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+/* 贴底后右下角已是直角，HudPanel 角标的圆弧要跟着归零 */
+.cx-nav-sheet::after { border-bottom-right-radius: 0; }
+.cx-nav-sheet-scroll {
+  margin-top: 0.5rem;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.cx-nav-sheet-scroll .chenxing-nav-item { min-height: 2.75rem; font-size: 0.9375rem; }
+@keyframes cx-nav-sheet-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes cx-nav-sheet-up {
+  from { transform: translateY(1.5rem); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cx-nav-sheet-overlay,
+  .cx-nav-sheet { animation: none; }
+}

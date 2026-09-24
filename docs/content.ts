@@ -8,7 +8,7 @@ const SOURCE_FILES: Record<string, string> = {
   'avatar-editor': 'avatar-editor.tsx', reveal: 'motion.tsx', 'count-up': 'motion.tsx',
   typewriter: 'motion.tsx', 'scramble-text': 'motion.tsx', 'draw-line': 'motion.tsx',
   'warp-field': 'space.tsx', 'space-backdrop': 'space.tsx', 'intro-gate': 'intro-gate.tsx',
-  'skip-link': 'skip-link.tsx', topbar: 'topbar.tsx', 'error-boundary': 'error-boundary.tsx', toast: 'toast.tsx',
+  'skip-link': 'skip-link.tsx', topbar: 'topbar.tsx', 'side-nav': 'side-nav.tsx', 'error-boundary': 'error-boundary.tsx', toast: 'toast.tsx',
 }
 
 export function sourceUrl(entry: DemoEntry) {
