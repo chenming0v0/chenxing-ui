@@ -9,12 +9,12 @@
 .chenxing-session-item-layout {
   /* 窄容器也保持「图标 | 内容」同一行：图标是这一行的锚点，
      拆成上下两段会让图标、标题、按钮各自漂浮，读不出是同一条会话。
-     操作区落到内容列下方，与标题左对齐，按钮按内容宽度排列。 */
+     操作区独占下一整行，按钮等分铺满，手指好点也不显得局促。 */
   display: grid;
   grid-template-columns: 2.5rem minmax(0, 1fr);
   grid-template-areas:
-    "icon content"
-    ".    actions";
+    "icon    content"
+    "actions actions";
   align-items: start;
   column-gap: 0.875rem;
   row-gap: 0.75rem;
@@ -65,6 +65,7 @@
   gap: 0.5rem;
 }
 .chenxing-session-item-actions > * {
+  flex: 1 1 0;
   min-width: 0;
   white-space: normal;
   overflow-wrap: anywhere;
@@ -82,4 +83,5 @@
     justify-content: flex-end;
     max-width: 18rem;
   }
+  .chenxing-session-item-actions > * { flex: 0 0 auto; }
 }
