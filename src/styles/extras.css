@@ -326,6 +326,12 @@
   transition: background 0.15s;
 }
 .cx-table tbody tr:hover { background: var(--chenxing-muted); }
+/* DataTableRow：可打开详情抽屉的行。键盘焦点环画在行内侧，不被外框圆角裁掉 */
+.cx-table tbody tr.cx-table-row-clickable { cursor: pointer; }
+.cx-table tbody tr.cx-table-row-clickable:focus-visible {
+  outline: none;
+  box-shadow: inset 0 0 0 2px var(--chenxing-cyan);
+}
 /* 空态行不是数据行：不参与 hover 反馈，并给 EmptyState 留出与独立空态一致的高度 */
 .cx-table tbody tr.cx-table-empty-row:hover { background: transparent; }
 .cx-table-empty {
@@ -335,6 +341,70 @@
   font-size: 0.875rem;
 }
 .cx-table-empty .cx-empty { min-height: 0; }
+.cx-table { min-width: var(--cx-table-min-width, 0); }
+
+/* 窄屏：每行一张「表头：值」卡片（newapi 同款），不做横向滚动。
+   表头在视觉上隐藏但保留给读屏器；标签来自 DataTable 写入的 data-label。
+   外框交还给卡片自身，避免「外框套卡片」的双层描边。 */
+@media (max-width: 767px) {
+  .cx-table-wrap {
+    overflow: visible;
+    border: 0;
+    border-radius: 0;
+  }
+  .cx-table { min-width: 0; }
+  .cx-table,
+  .cx-table tbody,
+  .cx-table tr,
+  .cx-table td { display: block; width: 100%; }
+  .cx-table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  .cx-table tbody { display: grid; gap: 0.75rem; }
+  .cx-table tbody tr {
+    border: 1px solid var(--chenxing-border);
+    border-radius: var(--chenxing-radius-md);
+    background: rgba(4, 8, 16, 0.45);
+    padding: 0.35rem 0.9rem;
+  }
+  .cx-table tbody td {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.6rem 0;
+    text-align: right;
+    overflow-wrap: anywhere;
+  }
+  .cx-table tbody td + td { border-top: 1px dashed var(--chenxing-border); }
+  .cx-table tbody tr.cx-table-row-clickable:hover { border-color: var(--chenxing-border-strong); }
+  .cx-table tbody td[data-label]:not([data-label=""])::before {
+    content: attr(data-label);
+    flex: none;
+    max-width: 45%;
+    text-align: left;
+    font-family: var(--chenxing-font-display);
+    font-size: 0.8125rem;
+    color: var(--chenxing-muted-foreground);
+  }
+  .cx-table tbody td > * { min-width: 0; }
+  /* 操作区是卡片底栏：不显示「操作」标签，按钮靠右换行 */
+  .cx-table tbody td.cx-table-actions { justify-content: flex-end; }
+  .cx-table tbody td.cx-table-actions::before { display: none; }
+  .cx-table tbody td.cx-table-actions > div { flex-wrap: wrap; justify-content: flex-end; }
+  /* 空态不是数据卡片 */
+  .cx-table tbody tr.cx-table-empty-row {
+    border-style: dashed;
+    background: transparent;
+  }
+  .cx-table tbody td.cx-table-empty { display: block; padding: 2rem 0.5rem; text-align: center; }
+  .cx-table tbody td.cx-table-empty::before { display: none; }
+}
 .cx-empty {
   display: grid;
   place-items: center;
@@ -359,9 +429,13 @@
   transition-delay: var(--reveal-delay, 0ms);
   will-change: opacity, transform;
 }
+/* 揭示后必须撤掉 will-change：will-change: opacity 会让本元素成为 Backdrop Root，
+   里面的 HudPanel 的 backdrop-filter 只能模糊 Reveal 自己（空的），
+   玻璃变成「透明底」，背后的线条和网格原样透出来。 */
 .cx-reveal.is-visible {
   opacity: 1;
   transform: translateY(0);
+  will-change: auto;
 }
 
 

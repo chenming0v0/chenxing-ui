@@ -43,7 +43,7 @@ export { useModalFocus } from './components/modal'
 export { ModalOverlay, type ModalOverlayProps } from './components/modal-overlay'
 
 // 数据表
-export { DataTable, RowAction, RowActions, TablePagination, TablePanel, type DataTableColumn } from './components/data-table'
+export { DataTable, DataTableRow, RowAction, RowActions, TablePagination, TablePanel, type DataTableColumn } from './components/data-table'
 
 // 设置列表项（移动端全宽操作 / 桌面端行尾操作）
 export { SettingsActionRow, type SettingsActionRowProps } from './components/settings-action-row'

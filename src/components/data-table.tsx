@@ -1,4 +1,4 @@
-import type { ButtonHTMLAttributes, ReactNode } from 'react'
+import { useLayoutEffect, useRef, type ButtonHTMLAttributes, type CSSProperties, type HTMLAttributes, type KeyboardEvent, type ReactNode } from 'react'
 import { Button, HudPanel, Icon } from './ui'
 
 /**
@@ -19,7 +19,7 @@ export type DataTableColumn =
 
 type DataTableProps = {
   columns: DataTableColumn[]
-  /** 低于该宽度时 .cx-table-wrap 出现横向滚动，不挤压列 */
+  /** 桌面端表格的最小宽度：容器更窄时横向滚动，不挤压列；窄屏卡片布局不受影响 */
   minWidth?: number
   /**
    * 无数据时渲染的内容，自动跨满所有列。
@@ -50,13 +50,43 @@ function columnKey(column: DataTableColumn, index: number): string {
 }
 
 /**
+ * 窄屏下每行渲染成一张「表头：值」卡片，单元格需要知道自己属于哪一列。
+ * 行由调用方渲染（可能包在任意组件里），组件拿不到 <td> 的 React 元素，
+ * 所以在提交后按列位置从 <th> 读取文本写到 data-label，CSS 用 attr() 显示。
+ * colSpan 单元格按跨度推进列下标，保证后续单元格仍对得上表头。
+ */
+function labelCells(table: HTMLTableElement) {
+  const labels = Array.from(table.tHead?.rows[0]?.cells ?? [], (th) => th.textContent?.trim() ?? '')
+  for (const body of Array.from(table.tBodies)) {
+    for (const row of Array.from(body.rows)) {
+      let column = 0
+      for (const cell of Array.from(row.cells)) {
+        const label = labels[column] ?? ''
+        if (cell.dataset.label !== label) cell.dataset.label = label
+        column += cell.colSpan || 1
+      }
+    }
+  }
+}
+
+/**
  * 表格唯一入口：`.cx-table-wrap` / `.cx-table` 的类名契约只在这里出现一次。
  * 页面不得自己拼表格外框、表头排版或分隔线，否则表格规范变更时无法统一跟随。
+ * 桌面端是普通表格；窄屏（<768px）每行变成一张带表头标签的卡片，不再横向滚动。
  */
 export function DataTable({ columns, minWidth, empty, children, className = '' }: DataTableProps) {
+  const tableRef = useRef<HTMLTableElement>(null)
+  // 无依赖数组：行内容随任意渲染变化，每次提交后重新对齐标签；只在值变化时写 DOM
+  useLayoutEffect(() => {
+    if (tableRef.current) labelCells(tableRef.current)
+  })
   return (
     <div className={`cx-table-wrap mt-5 ${className}`}>
-      <table className="cx-table" style={minWidth ? { minWidth: `${minWidth}px` } : undefined}>
+      <table
+        ref={tableRef}
+        className="cx-table"
+        style={minWidth ? ({ '--cx-table-min-width': `${minWidth}px` } as CSSProperties) : undefined}
+      >
         <thead>
           <tr>
             {columns.map((column, index) => {
@@ -81,6 +111,41 @@ export function DataTable({ columns, minWidth, empty, children, className = '' }
         </tbody>
       </table>
     </div>
+  )
+}
+
+type DataTableRowProps = Omit<HTMLAttributes<HTMLTableRowElement>, 'onClick' | 'onKeyDown'> & {
+  /**
+   * 行详情的唯一入口：调用方在这里打开详情抽屉（Drawer）。
+   * 表格行不做内联展开、不跳整页、不弹居中对话框——详情统一走抽屉。
+   */
+  onOpen: () => void
+  /** 读屏器与键盘用户听到的行名称，例如「查看 张三 详情」 */
+  label: string
+}
+
+/**
+ * 可点击的表格行：整行点击、Enter / 空格都会打开详情；
+ * 行内 RowActions 已吞掉冒泡，不会连带打开。
+ */
+export function DataTableRow({ onOpen, label, className = '', children, ...rest }: DataTableRowProps) {
+  function handleKeyDown(event: KeyboardEvent<HTMLTableRowElement>) {
+    if (event.target !== event.currentTarget) return
+    if (event.key !== 'Enter' && event.key !== ' ') return
+    event.preventDefault()
+    onOpen()
+  }
+  return (
+    <tr
+      {...rest}
+      className={`cx-table-row-clickable ${className}`}
+      tabIndex={0}
+      aria-label={label}
+      onClick={onOpen}
+      onKeyDown={handleKeyDown}
+    >
+      {children}
+    </tr>
   )
 }
 
@@ -142,7 +207,7 @@ export function RowAction({ tone = 'default', className = '', ...props }: RowAct
  */
 export function RowActions({ children, className = '' }: { children: ReactNode; className?: string }) {
   return (
-    <td className={`text-right ${className}`} onClick={(event) => event.stopPropagation()}>
+    <td className={`cx-table-actions text-right ${className}`} onClick={(event) => event.stopPropagation()}>
       <div className="inline-flex flex-wrap items-center justify-end gap-2">{children}</div>
     </td>
   )

@@ -184,7 +184,7 @@ export const DATA_ENTRIES: DemoEntry[] = [
   {
     slug: 'table',
     name: 'TablePanel + DataTable + TablePagination',
-    description: '表格三件套：面板外框、列定义与空态、统一分页栏；行内操作用 RowActions + RowAction 文字链接。',
+    description: '表格三件套：面板外框、列定义与空态、统一分页栏；行内操作用 RowActions + RowAction 文字链接；行详情用 DataTableRow 打开 Drawer。窄屏自动变成逐行「表头：值」卡片。',
     imports: ['TablePanel', 'DataTable', 'TablePagination', 'RowActions', 'RowAction'],
     wide: true,
     Demo: TableDemo,
