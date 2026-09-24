@@ -65,7 +65,9 @@ export function BrandLockup({ subtitle = '辰星认证中枢', compact = false }
       <BrandMark decorative className={compact ? 'chenxing-brand-logo' : 'h-8 w-8 rounded-[var(--chenxing-radius-md)]'} />
       <span className={compact ? undefined : 'hidden sm:block'}>
         <FlowGoldText className={`block ${compact ? 'text-base' : 'text-lg'} leading-tight`}>天穹辰星</FlowGoldText>
-        <span className={compact ? 'chenxing-mono block text-[9px] uppercase tracking-[0.24em] text-[var(--chenxing-muted-foreground)]' : 'chenxing-caption block text-[10px] leading-tight tracking-[0.08em]'}>{subtitle}</span>
+        {/* 副标题是中文：9–10px 等宽 + 大字距在小屏上糊成一团。最小 11px、
+            常规字体、浅一档的前景色，保证在深色星图背景上仍可读。 */}
+        <span className={`block ${compact ? 'mt-0.5' : ''} text-[11px] leading-tight tracking-[0.06em] text-[var(--chenxing-ice)] opacity-80`}>{subtitle}</span>
       </span>
     </span>
   )
