@@ -343,6 +343,43 @@
 .cx-table-empty .cx-empty { min-height: 0; }
 .cx-table { min-width: var(--cx-table-min-width, 0); }
 
+/* TablePanel 操作区：桌面端始终展开、开关隐藏；窄屏默认收起，
+   开关是整宽的细描边条（newapi「显示操作项」同款），展开后控件纵向铺满。 */
+.cx-table-panel-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+.cx-table-actions-toggle { display: none; }
+@media (max-width: 767px) {
+  .cx-table-actions-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    width: 100%;
+    min-height: 2.25rem;
+    border: 1px solid var(--chenxing-border);
+    border-radius: var(--chenxing-radius-full);
+    background: rgba(4, 8, 16, 0.35);
+    color: var(--chenxing-foreground);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .cx-table-actions-toggle:hover { border-color: var(--chenxing-border-strong); }
+  .cx-table-actions-toggle:focus-visible { outline: 2px solid var(--chenxing-cyan); outline-offset: 2px; }
+  .cx-table-panel-actions { display: none; }
+  .cx-table-panel-actions[data-open] {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.625rem;
+  }
+  .cx-table-panel-actions[data-open] > * { width: 100%; }
+}
+
 /* 窄屏：每行一张「表头：值」卡片（newapi 同款），不做横向滚动。
    表头在视觉上隐藏但保留给读屏器；标签来自 DataTable 写入的 data-label。
    外框交还给卡片自身，避免「外框套卡片」的双层描边。 */

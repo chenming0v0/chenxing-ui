@@ -1,6 +1,6 @@
 import { describe, expect, it, vi, afterEach } from 'vitest'
 import { render, screen, cleanup, fireEvent } from '@testing-library/react'
-import { DataTable, DataTableRow, RowAction, RowActions } from './data-table'
+import { DataTable, DataTableRow, RowAction, RowActions, TablePanel } from './data-table'
 import { SearchField } from './ui'
 
 afterEach(cleanup)
@@ -127,5 +127,27 @@ describe('DataTableRow', () => {
     fireEvent.keyDown(screen.getByRole('button', { name: '停用' }), { key: 'Enter' })
     fireEvent.click(screen.getByRole('button', { name: '停用' }))
     expect(onOpen).toHaveBeenCalledTimes(3)
+  })
+})
+
+describe('TablePanel', () => {
+  it('collapses the action area behind a toggle for narrow screens', () => {
+    render(
+      <TablePanel title="用户" action={<button type="button">查询</button>}>
+        <p>body</p>
+      </TablePanel>,
+    )
+    const toggle = screen.getByRole('button', { name: '显示操作项' })
+    const region = document.getElementById(toggle.getAttribute('aria-controls') ?? '')
+    expect(toggle.getAttribute('aria-expanded')).toBe('false')
+    expect(region?.hasAttribute('data-open')).toBe(false)
+    fireEvent.click(toggle)
+    expect(screen.getByRole('button', { name: '隐藏操作项' }).getAttribute('aria-expanded')).toBe('true')
+    expect(region?.hasAttribute('data-open')).toBe(true)
+  })
+
+  it('renders no toggle without actions', () => {
+    render(<TablePanel title="用户"><p>body</p></TablePanel>)
+    expect(screen.queryByRole('button', { name: '显示操作项' })).toBeNull()
   })
 })

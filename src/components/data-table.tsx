@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, type ButtonHTMLAttributes, type CSSProperties, type HTMLAttributes, type KeyboardEvent, type ReactNode } from 'react'
+import { useId, useLayoutEffect, useRef, useState, type ButtonHTMLAttributes, type CSSProperties, type HTMLAttributes, type KeyboardEvent, type ReactNode } from 'react'
 import { Button, HudPanel, Icon } from './ui'
 
 /**
@@ -165,11 +165,15 @@ type TablePanelProps = {
 /**
  * 列表面板：统一「HudPanel + 图标标题 + 说明 + 右上操作 + 表格」的排版。
  * 表格类页面一律走这里，不要再用 `HudPanel !p-0` 做通栏表格。
+ * 窄屏（<768px）下筛选/操作区默认收起，由「显示操作项」开关展开，
+ * 否则一排筛选控件会把第一行数据挤出首屏；桌面端操作区始终可见。
  */
 export function TablePanel({ icon, title, description, action, notice, children, className = '' }: TablePanelProps) {
+  const [actionsOpen, setActionsOpen] = useState(false)
+  const actionsId = useId()
   return (
     <HudPanel className={className}>
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+      <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
         <div className="min-w-0">
           <h2 className="chenxing-h2 flex items-center gap-2">
             {icon ? <Icon name={icon} className="shrink-0 text-[var(--chenxing-cyan)]" size={18} /> : null}
@@ -177,7 +181,21 @@ export function TablePanel({ icon, title, description, action, notice, children,
           </h2>
           {description ? <p className="chenxing-caption mt-1.5">{description}</p> : null}
         </div>
-        {action ? <div className="flex flex-wrap items-center gap-3">{action}</div> : null}
+        {action ? (
+          <>
+            <button
+              type="button"
+              className="cx-table-actions-toggle"
+              aria-expanded={actionsOpen}
+              aria-controls={actionsId}
+              onClick={() => setActionsOpen((open) => !open)}
+            >
+              <Icon name={actionsOpen ? 'eye-off' : 'eye'} size={15} />
+              {actionsOpen ? '隐藏操作项' : '显示操作项'}
+            </button>
+            <div id={actionsId} className="cx-table-panel-actions" data-open={actionsOpen || undefined}>{action}</div>
+          </>
+        ) : null}
       </div>
       {notice ? <div className="mt-4">{notice}</div> : null}
       {children}
