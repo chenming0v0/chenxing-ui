@@ -307,6 +307,7 @@ export function Topbar({
   account,
   hideBrandWhenExpanded = false,
   expandOnTop = true,
+  subnav,
 }: {
   /** 左侧品牌插槽（调用方自带链接语义） */
   brand?: ReactNode
@@ -329,6 +330,9 @@ export function Topbar({
   hideBrandWhenExpanded?: boolean
   /** 置顶时展开为全宽透明条；无滚动上下文的页面（如文档演示）传 false 固定胶囊形态 */
   expandOnTop?: boolean
+  /** 二级分栏（建议 TopbarSubnav）：作为独立的第二枚胶囊从主胶囊下方弹出；
+      汉堡/账户抽屉打开时缩回主胶囊背后，给抽屉让路。 */
+  subnav?: ReactNode
 }) {
   const { expanded, sentinelRef } = useTopbarExpanded()
   /* 汉堡与账户是两个互斥 disclosure，共享同一个胶囊抽屉：点任一个按钮都只换
@@ -379,6 +383,7 @@ export function Topbar({
         data-expanded={isExpanded || undefined}
         data-open={anyOpen || undefined}
         data-hide-brand-when-expanded={hideBrandWhenExpanded || undefined}
+        data-has-subnav={subnav ? true : undefined}
       >
         {/* 胶囊视觉在内层：外层 header 流内高度固定一行，
             抽屉展开只向下溢出覆盖内容，不改变文档高度与滚动条长度。 */}
@@ -471,6 +476,8 @@ export function Topbar({
             </div>
           ) : null}
         </div>
+        {/* 主胶囊之后的兄弟节点：绘制顺序在主胶囊之下，弹出时像从它背后「分身」出来 */}
+        {subnav ? <div className="chenxing-topbar-subnav-slot" inert={anyOpen || undefined}>{subnav}</div> : null}
       </header>
       {(anyOpen || closing) ? (
         <div

@@ -1,0 +1,113 @@
+/* ---------- 顶栏二级分栏：从主胶囊背后「分身」弹出的第二枚胶囊 ----------
+   插槽是 header 内、主胶囊之后的兄弟节点，绝对定位在胶囊正下方：
+   header 的流内高度仍只有一行，分栏和抽屉一样只在视觉上向下溢出，
+   页面自己负责给内容留出分栏高度（见 --chenxing-topbar-subnav-space）。 */
+:root {
+  /* 带超调的弹簧曲线：先冲过目标一点再回落，用于「弹出」「滑块跟随」 */
+  --chenxing-ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  /* 分栏占用的纵向空间（间距 + 胶囊高度），供页面内容区预留 */
+  --chenxing-topbar-subnav-space: 3.75rem;
+}
+
+.chenxing-topbar-subnav-slot {
+  position: absolute;
+  top: calc(100% + 0.55rem);
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+  /* 从主胶囊的底边中点长出来：缩放原点贴着主胶囊 */
+  transform-origin: 50% 0;
+  animation: cx-subnav-spawn 0.72s var(--chenxing-ease-spring) 0.08s backwards;
+  transition:
+    transform 0.55s var(--chenxing-ease-spring),
+    opacity 0.3s ease;
+}
+/* 抽屉打开时分栏缩回主胶囊背后：收回用干脆的 ease-in，不回弹 */
+.chenxing-topbar[data-open] .chenxing-topbar-subnav-slot {
+  transform: translateY(-115%) scale(0.72, 0.4);
+  opacity: 0;
+  transition:
+    transform 0.32s cubic-bezier(0.55, 0, 0.75, 0),
+    opacity 0.22s ease 0.08s;
+}
+
+@keyframes cx-subnav-spawn {
+  0% { transform: translateY(-115%) scale(0.72, 0.4); opacity: 0; }
+  35% { opacity: 1; }
+  100% { transform: none; opacity: 1; }
+}
+
+.chenxing-topbar-subnav {
+  pointer-events: auto;
+  max-width: min(100%, 60rem);
+  background: var(--chenxing-glass-background);
+  backdrop-filter: var(--chenxing-glass-blur);
+  -webkit-backdrop-filter: var(--chenxing-glass-blur);
+  border: 1px solid var(--chenxing-glass-border);
+  border-radius: var(--chenxing-radius-lg);
+  box-shadow: var(--chenxing-glass-shadow);
+}
+
+.chenxing-topbar-subnav-list {
+  position: relative;
+  display: flex;
+  gap: 0.125rem;
+  padding: 0.3rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  overscroll-behavior-x: contain;
+  scroll-padding-inline: 1rem;
+}
+.chenxing-topbar-subnav-list::-webkit-scrollbar { display: none; }
+
+/* 选中滑块：一块独立的底，用弹簧曲线在分栏之间滑动并伸缩宽度 */
+.chenxing-topbar-subnav-indicator {
+  position: absolute;
+  top: 0.3rem;
+  bottom: 0.3rem;
+  left: 0;
+  width: var(--cx-subnav-w, 0);
+  transform: translateX(var(--cx-subnav-x, 0));
+  border-radius: var(--chenxing-radius-md);
+  background: linear-gradient(160deg, rgba(103, 232, 249, 0.16), rgba(56, 189, 248, 0.06));
+  box-shadow:
+    inset 0 0 0 1px rgba(103, 232, 249, 0.32),
+    0 0 18px rgba(56, 189, 248, 0.18);
+  transition:
+    transform 0.5s var(--chenxing-ease-spring),
+    width 0.5s var(--chenxing-ease-spring);
+  pointer-events: none;
+}
+
+.chenxing-topbar-subnav-tab {
+  position: relative;
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 2.5rem;
+  padding: 0 0.95rem;
+  border-radius: var(--chenxing-radius-md);
+  color: var(--chenxing-muted-foreground);
+  font-size: 0.875rem;
+  font-weight: 500;
+  white-space: nowrap;
+  transition: color 0.2s ease, background 0.2s ease;
+}
+.chenxing-topbar-subnav-tab:hover { color: var(--chenxing-foreground); background: rgba(255, 255, 255, 0.04); }
+.chenxing-topbar-subnav-tab[aria-selected="true"] { color: var(--chenxing-foreground); background: transparent; }
+.chenxing-topbar-subnav-tab[aria-selected="true"] svg { color: var(--chenxing-cyan); }
+.chenxing-topbar-subnav-tab:focus-visible { outline: 2px solid var(--chenxing-cyan); outline-offset: -2px; }
+
+@media (max-width: 639px) {
+  .chenxing-topbar-subnav-tab { min-height: 2.25rem; padding: 0 0.75rem; font-size: 0.8125rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chenxing-topbar-subnav-slot { animation: none; transition: opacity 0.15s ease; }
+  .chenxing-topbar[data-open] .chenxing-topbar-subnav-slot { transform: none; transition: opacity 0.15s ease; }
+  .chenxing-topbar-subnav-indicator,
+  .chenxing-topbar-subnav-tab { transition: none; }
+}
