@@ -3,8 +3,9 @@
    让出侧栏宽度（桌面）或底栏高度（移动端）。 */
 :root {
   --chenxing-sidebar-width: 15rem;
-  /* 移动端底栏占用的高度（含安全区），主列按它留白 */
-  --chenxing-bottom-nav-space: calc(5rem + env(safe-area-inset-bottom));
+  /* 移动端底栏自身高度（上下内边距 + 2.75rem 命中区 + 边框 + 安全区），
+     主列只让出这一段，内容自己的底部留白照旧 */
+  --chenxing-bottom-nav-space: calc(3.65rem + env(safe-area-inset-bottom));
 }
 
 .chenxing-sidenav-main { min-width: 0; }
