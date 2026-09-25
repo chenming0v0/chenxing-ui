@@ -230,23 +230,3 @@ export function RowActions({ children, className = '' }: { children: ReactNode; 
     </td>
   )
 }
-
-type TablePaginationProps = {
-  page: number
-  totalPages: number
-  total: number
-  onPageChange: (page: number) => void
-}
-
-/**
- * 分页控件：audit / clients / users 三处完全一样的翻页栏，抽到这里避免重复。
- */
-export function TablePagination({ page, totalPages, total, onPageChange }: TablePaginationProps) {
-  return (
-    <div className="mt-5 flex items-center justify-between gap-3">
-      <Button variant="ghost" disabled={page <= 1} onClick={() => onPageChange(page - 1)}>上一页</Button>
-      <span className="chenxing-caption">第 {page} / {totalPages} 页 · 共 {total} 条</span>
-      <Button variant="ghost" disabled={page >= totalPages} onClick={() => onPageChange(page + 1)}>下一页</Button>
-    </div>
-  )
-}

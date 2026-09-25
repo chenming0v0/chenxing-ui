@@ -76,6 +76,7 @@ function AvatarEditorDemo() {
 
 function TableDemo() {
   const [page, setPage] = useState(1)
+  const [pageSize, setPageSize] = useState(10)
   return (
     <div className="w-full">
       <TablePanel
@@ -98,7 +99,7 @@ function TableDemo() {
             </tr>
           ))}
         </DataTable>
-        <TablePagination page={page} totalPages={3} total={42} onPageChange={setPage} />
+        <TablePagination page={page} totalPages={Math.ceil(122 / pageSize)} total={122} pageSize={pageSize} onPageChange={setPage} onPageSizeChange={(size) => { setPageSize(size); setPage(1) }} />
       </TablePanel>
     </div>
   )
